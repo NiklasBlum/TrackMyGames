@@ -1,5 +1,6 @@
 <template>
   <v-data-table
+    :dense="isDense"
     :headers="headers"
     :items="games"
     :items-per-page="5"
@@ -17,6 +18,9 @@
           clearable
         />
         <v-spacer />
+        <v-btn icon @click="isDense = !isDense"
+          ><v-icon>mdi-minus-circle-outline</v-icon></v-btn
+        >
         <v-dialog v-model="dialog" max-width="600px">
           <template v-slot:activator="{ on }">
             <v-btn large icon class="mb-1" v-on="on">
@@ -58,6 +62,7 @@
                   </v-col>
                   <v-col cols="12" sm="6" md="4">
                     <v-switch
+                      dense
                       v-model="editedItem.Finished"
                       label="Finished"
                       color="green"
@@ -92,12 +97,8 @@
       </v-icon>
     </template>
     <template v-slot:item.Finished="{ item }">
-      <v-switch
-        v-model="item.Finished"
-        @click="FinishedCheckAction(item)"
-        color="green"
-        :loading="loading"
-      />
+      <v-icon color="success" v-if="item.Finished">mdi-check-all</v-icon>
+      <v-icon color="error" v-if="!item.Finished">mdi-cancel</v-icon>
     </template>
   </v-data-table>
 </template>
@@ -109,14 +110,11 @@ export default {
   data() {
     return {
       loading: false,
+      isDense: false,
       search: "",
       dialog: false,
       headers: [
-        {
-          text: "Game",
-          align: "left",
-          value: "Name"
-        },
+        { text: "Game", align: "left", value: "Name" },
         { text: "Platform", value: "Platform" },
         { text: "Account", value: "Account" },
         { text: "Finished", value: "Finished" },
