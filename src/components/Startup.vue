@@ -8,7 +8,7 @@ export default {
   data() {
     return {
       games: [],
-      artists: [],
+      platforms: [],
       accounts: []
     };
   },
