@@ -3,11 +3,11 @@
     :dense="isDense"
     :headers="headers"
     :items="games"
-    :items-per-page="5"
-    class="elevation-1"
+    :items-per-page="15"
+    :search="search"
     ><template v-slot:top>
       <v-toolbar flat>
-        <v-toolbar-title>My Songs</v-toolbar-title>
+        <v-toolbar-title>My Games</v-toolbar-title>
         <v-spacer />
         <v-text-field
           v-model="search"
@@ -19,8 +19,8 @@
         />
         <v-spacer />
         <v-btn icon @click="isDense = !isDense"
-          ><v-icon>mdi-minus-circle-outline</v-icon></v-btn
-        >
+          ><v-icon>mdi-minus-circle-outline</v-icon>
+        </v-btn>
         <v-dialog v-model="dialog" max-width="600px">
           <template v-slot:activator="{ on }">
             <v-btn large icon class="mb-1" v-on="on">
@@ -34,7 +34,7 @@
             <v-card-text>
               <v-container>
                 <v-row>
-                  <v-col cols="12" sm="6" md="4">
+                  <v-col cols="12" sm="6" md="6">
                     <v-text-field
                       v-model="editedItem.Name"
                       label="Game Name"
@@ -42,7 +42,7 @@
                       clearable
                     />
                   </v-col>
-                  <v-col cols="12" sm="6" md="4">
+                  <v-col cols="12" sm="6" md="6">
                     <v-select
                       v-model="editedItem.Platform"
                       :items="platforms"
@@ -51,7 +51,7 @@
                       clearable
                     />
                   </v-col>
-                  <v-col cols="12" sm="6" md="4">
+                  <v-col cols="12" sm="6" md="6">
                     <v-select
                       v-model="editedItem.Account"
                       :items="accounts"
@@ -137,7 +137,7 @@ export default {
   },
   computed: {
     formTitle() {
-      return this.editedIndex === -1 ? "New Item" : "Edit Item";
+      return this.editedIndex === -1 ? "New Game" : "Edit Game";
     },
     games: {
       get() {
