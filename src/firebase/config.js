@@ -1,6 +1,6 @@
-import firebase from 'firebase/app'
-import 'firebase/auth'
-import 'firebase/firestore'
+import firebase from 'firebase/app';
+import 'firebase/firestore';
+import store from '@/store/index.js';
 
 var config = {
     apiKey: "AIzaSyBkw_f2Tz82QiOPgz-lk4LGGqm_Dxufqg8",
@@ -14,5 +14,14 @@ var config = {
 };
 // Initialize Firebase
 const firebaseApp = firebase.initializeApp(config);
+
+firebase.getCurrentUser = () => {
+    return new Promise((resolve, reject) => {
+        firebase.auth().onAuthStateChanged(user => {
+            store.commit('setUser', user)
+            resolve(user);
+        }, reject);
+    })
+};
 
 export default firebaseApp.firestore();

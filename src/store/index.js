@@ -7,7 +7,9 @@ export default new Vuex.Store({
   state: {
     platforms: null,
     accounts: null,
-    games: null
+    games: null,
+    user: null,
+    currentView: "games"
   },
   mutations: {
     setPlatforms(state, platforms) {
@@ -18,8 +20,12 @@ export default new Vuex.Store({
     },
     setGames(state, games) {
       state.games = games;
+    },
+    setUser(state, user) {
+      state.user = user;
+    },
+    setCurrentView(state, view) {
+      state.currentView = view;
     }
-  },
-  actions: {},
-  modules: {}
+  }
 });
