@@ -1,15 +1,23 @@
 <template>
-  <v-container>
+  <v-container fluid>
     <Startup />
-    <v-layout row>
-      <v-flex xs12 mb-2>
+    <v-row no-gutters>
+      <v-col cols="12">
+        <v-row no-gutters justify="center">
+          <NavigationTabs />
+        </v-row>
+      </v-col>
+      <v-col v-show="currentView === 'games'" transition="scale-transition">
         <Statistics />
-      </v-flex>
-      <v-flex xs12 sm12><Games /> </v-flex>
-
-      <v-flex xs12 sm6> <Accounts /></v-flex>
-      <v-flex xs12 sm6> <Platforms /></v-flex>
-    </v-layout>
+        <Games />
+      </v-col>
+      <v-col v-show="currentView === 'accounts'">
+        <Accounts />
+      </v-col>
+      <v-col v-show="currentView === 'platforms'">
+        <Platforms />
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
@@ -19,13 +27,19 @@ import Games from "@/components/Games.vue";
 import Accounts from "@/components/Accounts.vue";
 import Platforms from "@/components/Platforms.vue";
 import Statistics from "@/components/Statistic.vue";
+import NavigationTabs from "@/components/Navigation/NavigationTabs.vue";
+import { mapState } from "vuex";
 export default {
   components: {
     Startup,
     Games,
     Accounts,
     Platforms,
-    Statistics
+    Statistics,
+    NavigationTabs
+  },
+  computed: {
+    ...mapState(["currentView"])
   }
 };
 </script>
