@@ -86,7 +86,9 @@ export default {
     saveAlbum() {
       if (this.editedIndex > -1) {
         //Update exisiting item
-        db.collection("accounts")
+        db.collection("users")
+          .doc(this.user.uid)
+          .collection("accounts")
           .doc(this.editedItem.id)
           .update({
             Name: this.editedItem.Name
@@ -94,7 +96,9 @@ export default {
         this.albums.splice(this.editedIndex, 1, this.editedItem);
       } else {
         //Create new Item
-        db.collection("accounts")
+        db.collection("users")
+          .doc(this.user.uid)
+          .collection("accounts")
           .add({
             Name: this.editedItem.Name
           })
@@ -106,7 +110,9 @@ export default {
       this.closeDialog();
     },
     deleteAlbum(id) {
-      db.collection("accounts")
+      db.collection("users")
+        .doc(this.user.uid)
+        .collection("accounts")
         .doc(id)
         .delete()
         .then(() => {
@@ -143,6 +149,11 @@ export default {
       },
       set(accounts) {
         this.$store.commit("setAccounts", accounts);
+      }
+    },
+    user: {
+      get() {
+        return this.$store.state.user;
       }
     }
   }

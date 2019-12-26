@@ -56,7 +56,7 @@
           <v-btn
             color="blue darken-1"
             text
-            @click="saveAlbum()"
+            @click="savePlatform()"
             :disabled="isSavingValid"
             >Save</v-btn
           >
@@ -83,10 +83,12 @@ export default {
     };
   },
   methods: {
-    saveAlbum() {
+    savePlatform() {
       if (this.editedIndex > -1) {
         //Update exisiting item
-        db.collection("platforms")
+        db.collection("users")
+          .doc(this.user.uid)
+          .collection("platforms")
           .doc(this.editedItem.id)
           .update({
             Name: this.editedItem.Name
@@ -94,7 +96,9 @@ export default {
         this.albums.splice(this.editedIndex, 1, this.editedItem);
       } else {
         //Create new Item
-        db.collection("platforms")
+        db.collection("users")
+          .doc(this.user.uid)
+          .collection("platforms")
           .add({
             Name: this.editedItem.Name
           })
@@ -106,7 +110,9 @@ export default {
       this.closeDialog();
     },
     deleteAlbum(id) {
-      db.collection("platforms")
+      db.collection("users")
+        .doc(this.user.uid)
+        .collection("platforms")
         .doc(id)
         .delete()
         .then(() => {
@@ -143,6 +149,11 @@ export default {
       },
       set(platforms) {
         this.$store.commit("setPlatforms", platforms);
+      }
+    },
+    user: {
+      get() {
+        return this.$store.state.user;
       }
     }
   }

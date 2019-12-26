@@ -139,6 +139,11 @@ export default {
     formTitle() {
       return this.editedIndex === -1 ? "New Game" : "Edit Game";
     },
+    user: {
+      get() {
+        return this.$store.state.user;
+      }
+    },
     games: {
       get() {
         return this.$store.state.games;
@@ -167,7 +172,9 @@ export default {
     saveSong() {
       if (this.editedIndex > -1) {
         // Update existing item
-        db.collection("games")
+        db.collection("users")
+          .doc(this.user.uid)
+          .collection("games")
           .doc(this.editedItem.id)
           .update({
             Name: this.editedItem.Name,
@@ -184,7 +191,9 @@ export default {
           Account: this.editedItem.Account || "",
           Finished: this.editedItem.Finished
         };
-        db.collection("games")
+        db.collection("users")
+          .doc(this.user.uid)
+          .collection("games")
           .add(newGame)
           .then(response => {
             newGame.id = response.id;
@@ -199,7 +208,9 @@ export default {
       this.dialog = true;
     },
     deleteItem(item) {
-      db.collection("games")
+      db.collection("users")
+        .doc(this.user.uid)
+        .collection("games")
         .doc(item.id)
         .delete()
         .then(() => {
@@ -215,10 +226,11 @@ export default {
         this.editedIndex = -1;
       }, 300);
     },
-
     FinishedCheckAction(item) {
       this.loading = true;
-      db.collection("games")
+      db.collection("users")
+        .doc(this.user.uid)
+        .collection("games")
         .doc(item.id)
         .update({
           Finished: !item.Finished

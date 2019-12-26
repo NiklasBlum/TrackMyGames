@@ -4,6 +4,7 @@
 
 <script>
 import db from "@/firebase/config";
+import { mapState } from "vuex";
 export default {
   data() {
     return {
@@ -14,7 +15,9 @@ export default {
   },
   methods: {
     getGames() {
-      db.collection("games")
+      db.collection("users")
+        .doc(this.user.uid)
+        .collection("games")
         .get()
         .then(snapshot => {
           snapshot.forEach(item => {
@@ -26,7 +29,9 @@ export default {
       this.$store.commit("setGames", this.games);
     },
     getAccounts() {
-      db.collection("accounts")
+      db.collection("users")
+        .doc(this.user.uid)
+        .collection("accounts")
         .get()
         .then(snapshot => {
           snapshot.forEach(item => {
@@ -38,7 +43,9 @@ export default {
       this.$store.commit("setAccounts", this.accounts);
     },
     getPlatforms() {
-      db.collection("platforms")
+      db.collection("users")
+        .doc(this.user.uid)
+        .collection("platforms")
         .get()
         .then(snapshot => {
           snapshot.forEach(item => {
@@ -54,6 +61,9 @@ export default {
     this.getGames();
     this.getPlatforms();
     this.getAccounts();
+  },
+  computed: {
+    ...mapState(["user"])
   }
 };
 </script>
