@@ -5,6 +5,7 @@
     :items="games"
     :items-per-page="15"
     :search="search"
+    sort-by="Finished"
     ><template v-slot:top>
       <v-toolbar flat>
         <v-toolbar-title>My Games</v-toolbar-title>
