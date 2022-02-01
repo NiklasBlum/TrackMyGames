@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid>
+  <div>
     <Startup />
     <v-row no-gutters>
       <v-col cols="12">
@@ -18,7 +18,7 @@
         <Platforms />
       </v-col>
     </v-row>
-  </v-container>
+  </div>
 </template>
 
 <script>
@@ -36,10 +36,10 @@ export default {
     Accounts,
     Platforms,
     Statistics,
-    NavigationTabs
+    NavigationTabs,
   },
   computed: {
-    ...mapState(["currentView"])
-  }
+    ...mapState(["currentView"]),
+  },
 };
 </script>
