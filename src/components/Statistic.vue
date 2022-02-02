@@ -14,11 +14,11 @@ export default {
     games: {
       get() {
         return this.$store.state.games;
-      }
+      },
     },
     finished() {
-      return this.games.filter(game => {
-        return game.Finished == true;
+      return this.games.filter((game) => {
+        return game.finished == true;
       }).length;
     },
     total() {
@@ -26,7 +26,7 @@ export default {
     },
     proportion() {
       return (this.finished / this.total) * 100;
-    }
-  }
+    },
+  },
 };
 </script>

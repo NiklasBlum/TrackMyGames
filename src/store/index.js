@@ -5,9 +5,9 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    platforms: null,
-    accounts: null,
-    games: null,
+    platforms: [],
+    accounts: [],
+    games: [],
     user: null,
     currentView: "games"
   },

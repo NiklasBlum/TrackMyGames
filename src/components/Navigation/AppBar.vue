@@ -1,8 +1,5 @@
 <template>
-  <v-app-bar
-    app
-    src="https://www.elsetge.cat/imagepost/b/75/755997_polygon-wallpaper-4k.jpg"
-  >
+  <v-app-bar app>
     <v-toolbar-title>
       <router-link to="/" tag="span" style="cursor: pointer">
         <v-icon large>mdi-google-controller</v-icon>
@@ -30,10 +27,10 @@ import { mapState } from "vuex";
 import Logout from "@/components/Auth/Logout.vue";
 export default {
   components: {
-    Logout
+    Logout,
   },
   computed: {
-    ...mapState(["user"])
-  }
+    ...mapState(["user"]),
+  },
 };
 </script>

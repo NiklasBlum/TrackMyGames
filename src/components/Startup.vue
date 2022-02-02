@@ -3,59 +3,32 @@
 </template>
 
 <script>
-import db from "@/firebase/config";
 import { mapState } from "vuex";
+import FirestoreService from "@/services/FirestoreService.js";
 export default {
   data() {
     return {
       games: [],
       platforms: [],
-      accounts: []
+      accounts: [],
     };
   },
   methods: {
-    getGames() {
-      db.collection("users")
-        .doc(this.user.uid)
-        .collection("games")
-        .get()
-        .then(snapshot => {
-          snapshot.forEach(item => {
-            let snapItem = item.data();
-            snapItem.id = item.id;
-            this.games.push(snapItem);
-          });
-        });
+    async getGames() {
+      this.games = await FirestoreService.getDocuments("game");
+
       this.$store.commit("setGames", this.games);
     },
-    getAccounts() {
-      db.collection("users")
-        .doc(this.user.uid)
-        .collection("accounts")
-        .get()
-        .then(snapshot => {
-          snapshot.forEach(item => {
-            let snapItem = item.data();
-            snapItem.id = item.id;
-            this.accounts.push(snapItem);
-          });
-        });
+    async getAccounts() {
+      this.accounts = await FirestoreService.getDocuments("account");
+
       this.$store.commit("setAccounts", this.accounts);
     },
-    getPlatforms() {
-      db.collection("users")
-        .doc(this.user.uid)
-        .collection("platforms")
-        .get()
-        .then(snapshot => {
-          snapshot.forEach(item => {
-            let snapItem = item.data();
-            snapItem.id = item.id;
-            this.platforms.push(snapItem);
-          });
-        });
+    async getPlatforms() {
+      this.platforms = await FirestoreService.getDocuments("platform");
+
       this.$store.commit("setPlatforms", this.platforms);
-    }
+    },
   },
   created() {
     this.getGames();
@@ -63,7 +36,7 @@ export default {
     this.getAccounts();
   },
   computed: {
-    ...mapState(["user"])
-  }
+    ...mapState(["user"]),
+  },
 };
 </script>

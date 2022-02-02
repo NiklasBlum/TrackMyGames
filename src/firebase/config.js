@@ -12,7 +12,7 @@ var config = {
   appId: "1:847550259729:web:ae12f6aadc1fd01d2387b0",
   measurementId: "G-NS7MJEJD19"
 };
-// Initialize Firebase
+
 const firebaseApp = firebase.initializeApp(config);
 
 firebase.getCurrentUser = () => {

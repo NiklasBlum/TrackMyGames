@@ -8,19 +8,22 @@
           <v-icon @click="dialog = true">mdi-plus</v-icon>
         </v-btn>
       </v-subheader>
-      <v-list-item v-for="album in albums" :key="album.id">
+      <v-list-item v-for="platform in platforms" :key="platform.id">
+        <v-list-item-icon>
+          <v-icon v-text="platform.icon" />
+        </v-list-item-icon>
         <v-list-item-content>
-          <v-list-item-title v-text="album.Name"></v-list-item-title>
+          <v-list-item-title v-text="platform.name" />
         </v-list-item-content>
         <v-list-item-action>
-          <v-layout row>
+          <v-row>
             <v-btn icon>
-              <v-icon @click="editAlbum(album)">mdi-pencil</v-icon>
+              <v-icon @click="editAlbum(platform)">mdi-pencil</v-icon>
             </v-btn>
             <v-btn icon>
-              <v-icon @click="deleteAlbum(album.id)">mdi-delete</v-icon>
+              <v-icon @click="deletePlatform(platform.id)">mdi-delete</v-icon>
             </v-btn>
-          </v-layout>
+          </v-row>
         </v-list-item-action>
       </v-list-item>
     </v-list>
@@ -28,7 +31,7 @@
     <v-dialog
       v-model="dialog"
       persistent
-      max-width="600px"
+      max-width="500px"
       @keydown.esc="dialog = false"
     >
       <v-card>
@@ -41,7 +44,7 @@
               <v-col cols="12" sm="6">
                 <v-text-field
                   label="Name"
-                  v-model="editedItem.Name"
+                  v-model="editedItem.name"
                   autofocus
                 />
               </v-col>
@@ -50,16 +53,17 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer />
-          <v-btn color="blue darken-1" text @click="closeDialog()"
-            >Cancel</v-btn
-          >
+          <v-btn color="blue darken-1" text @click="closeDialog()">
+            Cancel
+          </v-btn>
           <v-btn
             color="blue darken-1"
             text
             @click="savePlatform()"
             :disabled="isSavingValid"
-            >Save</v-btn
           >
+            Save
+          </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -75,55 +79,48 @@ export default {
       dialog: false,
       editedIndex: -1,
       editedItem: {
-        Name: ""
+        name: "",
       },
       defaultItem: {
-        Name: ""
-      }
+        name: "",
+      },
     };
   },
   methods: {
     savePlatform() {
+      //method to update platform
       if (this.editedIndex > -1) {
         //Update exisiting item
-        db.collection("users")
-          .doc(this.user.uid)
-          .collection("platforms")
-          .doc(this.editedItem.id)
-          .update({
-            Name: this.editedItem.Name
-          });
-        this.albums.splice(this.editedIndex, 1, this.editedItem);
+        db.collection("platform").doc(this.editedItem.id).update({
+          name: this.editedItem.name,
+        });
+        this.platforms.splice(this.editedIndex, 1, this.editedItem);
       } else {
         //Create new Item
-        db.collection("users")
-          .doc(this.user.uid)
-          .collection("platforms")
+        db.collection("platform")
           .add({
-            Name: this.editedItem.Name
+            name: this.editedItem.name,
           })
-          .then(response => {
-            var newAlbum = { Name: this.editedItem.Name, id: response.id };
-            this.albums.push(newAlbum);
+          .then((response) => {
+            var newPlatform = { name: this.editedItem.name, id: response.id };
+            this.platforms.push(newPlatform);
           });
       }
       this.closeDialog();
     },
-    deleteAlbum(id) {
-      db.collection("users")
-        .doc(this.user.uid)
-        .collection("platforms")
+    deletePlatform(id) {
+      db.collection("platform")
         .doc(id)
         .delete()
         .then(() => {
-          this.albums = this.albums.filter(Album => {
-            return Album.id != id;
+          this.platforms = this.platforms.filter((platform) => {
+            return platform.id != id;
           });
         });
     },
-    editAlbum(Album) {
-      this.editedIndex = this.albums.indexOf(Album);
-      this.editedItem = Object.assign({}, Album);
+    editAlbum(platform) {
+      this.editedIndex = this.platforms.indexOf(platform);
+      this.editedItem = Object.assign({}, platform);
       this.dialog = true;
     },
     closeDialog() {
@@ -132,30 +129,30 @@ export default {
         this.editedItem = Object.assign({}, this.defaultItem);
         this.editedIndex = -1;
       }, 300);
-    }
+    },
   },
   computed: {
     isSavingValid() {
-      if (this.editedItem.Name != "") {
+      if (this.editedItem.name != "") {
         return false;
       } else return true;
     },
     formTitle() {
       return this.editedIndex === -1 ? "New Platform" : "Update Platform";
     },
-    albums: {
+    platforms: {
       get() {
         return this.$store.state.platforms;
       },
       set(platforms) {
         this.$store.commit("setPlatforms", platforms);
-      }
+      },
     },
     user: {
       get() {
         return this.$store.state.user;
-      }
-    }
-  }
+      },
+    },
+  },
 };
 </script>
