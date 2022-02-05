@@ -5,15 +5,18 @@
         Platforms
         <v-spacer />
         <v-btn icon>
-          <v-icon @click="createPlatform">mdi-plus</v-icon>
+          <v-icon @click="openDialog">mdi-plus</v-icon>
         </v-btn>
       </v-subheader>
       <v-list-item v-for="platform in platforms" :key="platform.id">
         <v-list-item-icon>
-          <v-icon v-text="platform.icon" />
+          <v-icon size="40" v-text="platform.icon" />
         </v-list-item-icon>
         <v-list-item-content>
           <v-list-item-title v-text="platform.name" />
+          <v-list-item-subtitle
+            v-text="platform.createdAt.toDate().toLocaleDateString('de-DE')"
+          />
         </v-list-item-content>
         <v-list-item-action>
           <v-row>
@@ -33,7 +36,7 @@
       persistent
       max-width="500px"
       @keydown.esc="this.showDialog = false"
-      @keydown.enter="savePlatform(editedItem)"
+      @keydown.enter="savePlatform(platformItem)"
     >
       <v-card>
         <v-card-title>
@@ -45,12 +48,12 @@
               <v-col cols="12" sm="6">
                 <v-text-field
                   label="Name"
-                  v-model="editedItem.name"
+                  v-model="platformItem.name"
                   autofocus
                 />
               </v-col>
               <v-col cols="12" sm="6">
-                <v-text-field label="Icon" v-model="editedItem.icon" />
+                <v-text-field label="Icon" v-model="platformItem.icon" />
               </v-col>
             </v-row>
           </v-container>
@@ -63,7 +66,7 @@
           <v-btn
             color="blue darken-1"
             text
-            @click="savePlatform(editedItem)"
+            @click="savePlatform(platformItem)"
             :disabled="isSavingValid"
           >
             Save
@@ -83,30 +86,26 @@ export default {
     return {
       dialogMode: EditMode.new,
       showDialog: false,
-      editedItem: new Platform(),
-      defaultItem: new Platform(),
+      platformItem: new Platform(),
     };
   },
   methods: {
-    createPlatform() {
+    openDialog() {
       this.dialogMode = EditMode.new;
-
       this.showDialog = true;
     },
     async savePlatform(platform) {
-      console.log(platform);
       if (this.dialogMode == EditMode.edit) {
         await FirestoreService.updatePlatform(platform);
       } else {
         await FirestoreService.addPlatform(platform);
       }
-      this.platforms = await FirestoreService.getDocuments("platform");
+      this.platforms = await FirestoreService.getDocuments("platforms");
       this.closeDialog();
     },
     editPlatform(platform) {
       this.dialogMode = EditMode.edit;
-      this.editedIndex = this.platforms.indexOf(platform);
-      this.editedItem = Object.assign({}, platform);
+      this.platformItem = Object.assign({}, platform);
       this.showDialog = true;
     },
     async deletePlatform(id) {
@@ -118,13 +117,13 @@ export default {
     closeDialog() {
       this.showDialog = false;
       setTimeout(() => {
-        this.editedItem = Object.assign({}, new Platform());
-      }, 300);
+        this.platformItem = Object.assign({}, new Platform());
+      }, 50);
     },
   },
   computed: {
     isSavingValid() {
-      if (this.editedItem.name != "") {
+      if (this.platformItem.name != "") {
         return false;
       } else return true;
     },

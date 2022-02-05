@@ -5,31 +5,35 @@
         Accounts
         <v-spacer />
         <v-btn icon>
-          <v-icon @click="dialog = true">mdi-plus</v-icon>
+          <v-icon @click="openDialog">mdi-plus</v-icon>
         </v-btn>
       </v-subheader>
-      <v-list-item v-for="album in albums" :key="album.id">
+      <v-list-item v-for="account in accounts" :key="account.id">
         <v-list-item-content>
-          <v-list-item-title v-text="album.Name"></v-list-item-title>
+          <v-list-item-title v-text="account.name" />
+          <v-list-item-subtitle
+            v-text="account.createdAt.toDate().toLocaleDateString('de-DE')"
+          />
         </v-list-item-content>
         <v-list-item-action>
-          <v-layout row>
+          <v-row>
             <v-btn icon>
-              <v-icon @click="editAlbum(album)">mdi-pencil</v-icon>
+              <v-icon @click="editAccount(account)">mdi-pencil</v-icon>
             </v-btn>
             <v-btn icon>
-              <v-icon @click="deleteAlbum(album.id)">mdi-delete</v-icon>
+              <v-icon @click="deleteAccount(account.id)">mdi-delete</v-icon>
             </v-btn>
-          </v-layout>
+          </v-row>
         </v-list-item-action>
       </v-list-item>
     </v-list>
     <!-- PopUpDialog -->
     <v-dialog
-      v-model="dialog"
+      v-model="showDialog"
       persistent
-      max-width="600px"
-      @keydown.esc="dialog = false"
+      max-width="500px"
+      @keydown.esc="this.showDialog = false"
+      @keydown.enter="saveAccount(accountItem)"
     >
       <v-card>
         <v-card-title>
@@ -38,10 +42,10 @@
         <v-card-text>
           <v-container>
             <v-row>
-              <v-col cols="12" sm="6" md="6">
+              <v-col cols="12" sm="6">
                 <v-text-field
                   label="Name"
-                  v-model="editedItem.Name"
+                  v-model="accountItem.name"
                   autofocus
                 />
               </v-col>
@@ -50,16 +54,17 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer />
-          <v-btn color="blue darken-1" text @click="closeDialog()"
-            >Cancel</v-btn
-          >
+          <v-btn color="blue darken-1" text @click="closeDialog()">
+            Cancel
+          </v-btn>
           <v-btn
             color="blue darken-1"
             text
-            @click="saveAlbum()"
+            @click="saveAccount(accountItem)"
             :disabled="isSavingValid"
-            >Save</v-btn
           >
+            Save
+          </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -67,96 +72,64 @@
 </template>
 
 <script>
-import { firestore } from "@/firebase/config";
+import FirestoreService from "@/services/FirestoreService.js";
+import { Account, EditMode } from "@/models/dbModels.js";
 
 export default {
   data() {
     return {
-      dialog: false,
-      editedIndex: -1,
-      editedItem: {
-        Name: "",
-      },
-      defaultItem: {
-        Name: "",
-      },
+      dialogMode: EditMode.new,
+      showDialog: false,
+      accountItem: new Account(),
     };
   },
   methods: {
-    saveAlbum() {
-      if (this.editedIndex > -1) {
-        //Update exisiting item
-        firestore
-          .collection("users")
-          .doc(this.user.uid)
-          .collection("accounts")
-          .doc(this.editedItem.id)
-          .update({
-            Name: this.editedItem.Name,
-          });
-        this.albums.splice(this.editedIndex, 1, this.editedItem);
+    openDialog() {
+      this.dialogMode = EditMode.new;
+      this.showDialog = true;
+    },
+    async saveAccount(account) {
+      if (this.dialogMode == EditMode.edit) {
+        await FirestoreService.updateAccount(account);
       } else {
-        //Create new Item
-        firestore
-          .collection("users")
-          .doc(this.user.uid)
-          .collection("accounts")
-          .add({
-            Name: this.editedItem.Name,
-          })
-          .then((response) => {
-            var newAlbum = { Name: this.editedItem.Name, id: response.id };
-            this.albums.push(newAlbum);
-          });
+        await FirestoreService.addAccount(account);
       }
+      this.accounts = await FirestoreService.getDocuments("accounts");
       this.closeDialog();
     },
-    deleteAlbum(id) {
-      firestore
-        .collection("users")
-        .doc(this.user.uid)
-        .collection("accounts")
-        .doc(id)
-        .delete()
-        .then(() => {
-          this.albums = this.albums.filter((Album) => {
-            return Album.id != id;
-          });
-        });
+    editAccount(account) {
+      this.dialogMode = EditMode.edit;
+      this.accountItem = Object.assign({}, account);
+      this.showDialog = true;
     },
-    editAlbum(Album) {
-      this.editedIndex = this.albums.indexOf(Album);
-      this.editedItem = Object.assign({}, Album);
-      this.dialog = true;
+    async deleteAccount(id) {
+      await FirestoreService.deleteAccount(id);
+      this.accounts = this.accounts.filter((account) => {
+        return account.id != id;
+      });
     },
     closeDialog() {
-      this.dialog = false;
+      this.showDialog = false;
       setTimeout(() => {
-        this.editedItem = Object.assign({}, this.defaultItem);
-        this.editedIndex = -1;
-      }, 300);
+        this.accountItem = Object.assign({}, new Account());
+      }, 50);
     },
   },
   computed: {
     isSavingValid() {
-      if (this.editedItem.Name != "") {
+      if (this.accountItem.name != "") {
         return false;
       } else return true;
     },
     formTitle() {
-      return this.editedIndex === -1 ? "New Album" : "Update Album";
+      return this.dialogMode == EditMode.new ? "New Account" : "Update Account";
     },
-    albums: {
+    accounts: {
       get() {
         return this.$store.state.accounts;
       },
       set(accounts) {
         this.$store.commit("setAccounts", accounts);
-      },
-    },
-    user: {
-      get() {
-        return this.$store.state.user;
       },
     },
   },

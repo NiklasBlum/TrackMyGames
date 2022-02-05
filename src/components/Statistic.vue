@@ -18,7 +18,7 @@ export default {
     },
     finished() {
       return this.games.filter((game) => {
-        return game.finished == true;
+        return game.isFinished == true;
       }).length;
     },
     total() {

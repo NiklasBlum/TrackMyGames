@@ -22,7 +22,7 @@
         <v-btn icon @click="isDense = !isDense">
           <v-icon>mdi-minus-circle-outline</v-icon>
         </v-btn>
-        <v-dialog v-model="dialog" max-width="600px">
+        <v-dialog v-model="showDialog" max-width="600px">
           <template v-slot:activator="{ on }">
             <v-btn large icon class="mb-1" v-on="on">
               <v-icon>mdi-plus</v-icon>
@@ -37,7 +37,7 @@
                 <v-row>
                   <v-col cols="12" sm="6" md="6">
                     <v-text-field
-                      v-model="editedItem.name"
+                      v-model="gameItem.name"
                       label="Game Name"
                       autofocus
                       clearable
@@ -45,18 +45,18 @@
                   </v-col>
                   <v-col cols="12" sm="6" md="6">
                     <v-select
-                      v-model="editedItem.platform"
+                      v-model="gameItem.platform"
                       :items="platforms"
-                      item-text="Name"
+                      item-text="name"
                       label="Platforms"
                       clearable
                     />
                   </v-col>
                   <v-col cols="12" sm="6" md="6">
                     <v-select
-                      v-model="editedItem.account"
+                      v-model="gameItem.account"
                       :items="accounts"
-                      item-text="Name"
+                      item-text="name"
                       label="Accounts"
                       clearable
                     />
@@ -64,7 +64,7 @@
                   <v-col cols="12" sm="6" md="4">
                     <v-switch
                       dense
-                      v-model="editedItem.finished"
+                      v-model="gameItem.isFinished"
                       label="Finished"
                       color="green"
                     />
@@ -80,10 +80,11 @@
               <v-btn
                 color="blue darken-1"
                 text
-                @click="saveSong()"
+                @click="saveGame(gameItem)"
                 :disabled="isSavingValid"
-                >Save</v-btn
               >
+                Save
+              </v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
@@ -121,56 +122,39 @@
       />
     </template>
     <template v-slot:item.action="{ item }">
-      <v-icon small class="mr-2" @click="editItem(item)"> mdi-pencil </v-icon>
-      <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
+      <v-icon small class="mr-2" @click="editGame(item)"> mdi-pencil </v-icon>
+      <v-icon small @click="deleteGame(item.id)"> mdi-delete </v-icon>
     </template>
-    <template v-slot:item.finished="{ item }">
-      <v-icon color="success" v-if="item.Finished">mdi-check-all</v-icon>
-      <v-icon color="error" v-if="!item.Finished">mdi-cancel</v-icon>
+    <template v-slot:item.isFinished="{ item }">
+      <v-icon color="success" v-if="item.isFinished">mdi-check-all</v-icon>
+      <v-icon color="error" v-if="!item.isFinished">mdi-cancel</v-icon>
     </template>
   </v-data-table>
 </template>
 
 <script>
-import { firestore } from "@/firebase/config";
-
+import FirestoreService from "@/services/FirestoreService.js";
+import { Game, EditMode } from "@/models/dbModels.js";
 export default {
   data() {
     return {
-      loading: false,
-      isDense: false,
-      search: "",
-      dialog: false,
       headers: [
-        { text: "Game", align: "left", value: "Name" },
-        { text: "Platform", value: "Platform" },
-        { text: "Account", value: "Account" },
-        { text: "Finished", value: "Finished" },
+        { text: "Game", align: "left", value: "name" },
+        { text: "Platform", value: "platform" },
+        { text: "Account", value: "account" },
+        { text: "Finished", value: "isFinished" },
         { text: "Actions", value: "action", sortable: false },
       ],
-      editedIndex: -1,
-      editedItem: {
-        name: "",
-        platform: "",
-        account: "",
-        finished: false,
-      },
-      defaultItem: {
-        name: "",
-        platform: "",
-        account: "",
-        finished: false,
-      },
+      dialogMode: EditMode.new,
+      isDense: false,
+      search: "",
+      showDialog: false,
+      gameItem: new Game(),
     };
   },
   computed: {
     formTitle() {
-      return this.editedIndex === -1 ? "New Game" : "Edit Game";
-    },
-    user: {
-      get() {
-        return this.$store.state.user;
-      },
+      return this.dialogMode == EditMode.new ? "New Game" : "Edit Game";
     },
     games: {
       get() {
@@ -191,93 +175,42 @@ export default {
       },
     },
     isSavingValid() {
-      if (this.editedItem.name != "" && this.editedItem.name != undefined) {
+      if (this.gameItem.name != "" && this.gameItem.name != undefined) {
         return false;
       } else return true;
     },
   },
   methods: {
-    saveSong() {
-      if (this.editedIndex > -1) {
-        // Update existing item
-        firestore.collection("users")
-          .doc(this.user.uid)
-          .collection("games")
-          .doc(this.editedItem.id)
-          .update({
-            name: this.editedItem.name,
-            platform: this.editedItem.platform || "",
-            account: this.editedItem.account || "",
-            finished: this.editedItem.finished,
-          });
-        this.games.splice(this.editedIndex, 1, this.editedItem);
+    openDialog() {
+      this.dialogMode = EditMode.new;
+      this.showDialog = true;
+    },
+    async saveGame(game) {
+      console.log(game);
+      if (this.dialogMode == EditMode.edit) {
+        await FirestoreService.updateGame(game);
       } else {
-        //Create new Item
-        var newGame = {
-          name: this.editedItem.name,
-          platform: this.editedItem.platform || "",
-          account: this.editedItem.account || "",
-          Finished: this.editedItem.finished,
-        };
-        firestore.collection("users")
-          .doc(this.user.uid)
-          .collection("games")
-          .add(newGame)
-          .then((response) => {
-            newGame.id = response.id;
-            this.games.push(newGame);
-          });
+        await FirestoreService.addGame(game);
       }
+      this.games = await FirestoreService.getDocuments("games");
       this.closeDialog();
     },
-    editItem(item) {
-      this.editedIndex = this.games.indexOf(item);
-      this.editedItem = Object.assign({}, item);
-      this.dialog = true;
+    editGame(game) {
+      this.dialogMode = EditMode.edit;
+      this.gameItem = Object.assign({}, game);
+      this.showDialog = true;
     },
-    deleteItem(item) {
-      firestore.collection("users")
-        .doc(this.user.uid)
-        .collection("games")
-        .doc(item.id)
-        .delete()
-        .then(() => {
-          this.games = this.games.filter((game) => {
-            return game.id != item.id;
-          });
-        });
+    async deleteGame(id) {
+      await FirestoreService.deleteGame(id);
+      this.games = this.games.filter((game) => {
+        return game.id != id;
+      });
     },
     closeDialog() {
-      this.dialog = false;
+      this.showDialog = false;
       setTimeout(() => {
-        this.editedItem = Object.assign({}, this.defaultItem);
-        this.editedIndex = -1;
-      }, 300);
-    },
-    FinishedCheckAction(item) {
-      this.loading = true;
-      firestore.collection("users")
-        .doc(this.user.uid)
-        .collection("games")
-        .doc(item.id)
-        .update({
-          finished: !item.finished,
-        })
-        .then(() => {
-          var foundIndex = this.games.findIndex((x) => x.id == item.id);
-          var updatedItem = {
-            name: item.name,
-            platform: item.platform,
-            account: item.account,
-            finished: !item.finished,
-            id: item.id,
-          };
-          //Use splice to trigger update
-          this.games.splice(foundIndex, 1, updatedItem);
-        })
-        .finally(() => {
-          this.loading = false;
-        });
+        this.gameItem = Object.assign({}, new Game());
+      }, 50);
     },
   },
 };
