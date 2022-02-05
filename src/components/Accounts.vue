@@ -67,7 +67,7 @@
 </template>
 
 <script>
-import db from "@/firebase/config";
+import { firestore } from "@/firebase/config";
 
 export default {
   data() {
@@ -75,34 +75,36 @@ export default {
       dialog: false,
       editedIndex: -1,
       editedItem: {
-        Name: ""
+        Name: "",
       },
       defaultItem: {
-        Name: ""
-      }
+        Name: "",
+      },
     };
   },
   methods: {
     saveAlbum() {
       if (this.editedIndex > -1) {
         //Update exisiting item
-        db.collection("users")
+        firestore
+          .collection("users")
           .doc(this.user.uid)
           .collection("accounts")
           .doc(this.editedItem.id)
           .update({
-            Name: this.editedItem.Name
+            Name: this.editedItem.Name,
           });
         this.albums.splice(this.editedIndex, 1, this.editedItem);
       } else {
         //Create new Item
-        db.collection("users")
+        firestore
+          .collection("users")
           .doc(this.user.uid)
           .collection("accounts")
           .add({
-            Name: this.editedItem.Name
+            Name: this.editedItem.Name,
           })
-          .then(response => {
+          .then((response) => {
             var newAlbum = { Name: this.editedItem.Name, id: response.id };
             this.albums.push(newAlbum);
           });
@@ -110,13 +112,14 @@ export default {
       this.closeDialog();
     },
     deleteAlbum(id) {
-      db.collection("users")
+      firestore
+        .collection("users")
         .doc(this.user.uid)
         .collection("accounts")
         .doc(id)
         .delete()
         .then(() => {
-          this.albums = this.albums.filter(Album => {
+          this.albums = this.albums.filter((Album) => {
             return Album.id != id;
           });
         });
@@ -132,7 +135,7 @@ export default {
         this.editedItem = Object.assign({}, this.defaultItem);
         this.editedIndex = -1;
       }, 300);
-    }
+    },
   },
   computed: {
     isSavingValid() {
@@ -149,13 +152,13 @@ export default {
       },
       set(accounts) {
         this.$store.commit("setAccounts", accounts);
-      }
+      },
     },
     user: {
       get() {
         return this.$store.state.user;
-      }
-    }
-  }
+      },
+    },
+  },
 };
 </script>

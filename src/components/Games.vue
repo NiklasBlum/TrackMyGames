@@ -132,7 +132,7 @@
 </template>
 
 <script>
-import db from "@/firebase/config";
+import { firestore } from "@/firebase/config";
 
 export default {
   data() {
@@ -200,7 +200,7 @@ export default {
     saveSong() {
       if (this.editedIndex > -1) {
         // Update existing item
-        db.collection("users")
+        firestore.collection("users")
           .doc(this.user.uid)
           .collection("games")
           .doc(this.editedItem.id)
@@ -219,7 +219,7 @@ export default {
           account: this.editedItem.account || "",
           Finished: this.editedItem.finished,
         };
-        db.collection("users")
+        firestore.collection("users")
           .doc(this.user.uid)
           .collection("games")
           .add(newGame)
@@ -236,7 +236,7 @@ export default {
       this.dialog = true;
     },
     deleteItem(item) {
-      db.collection("users")
+      firestore.collection("users")
         .doc(this.user.uid)
         .collection("games")
         .doc(item.id)
@@ -256,7 +256,7 @@ export default {
     },
     FinishedCheckAction(item) {
       this.loading = true;
-      db.collection("users")
+      firestore.collection("users")
         .doc(this.user.uid)
         .collection("games")
         .doc(item.id)

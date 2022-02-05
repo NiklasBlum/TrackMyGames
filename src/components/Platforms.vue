@@ -5,7 +5,7 @@
         Platforms
         <v-spacer />
         <v-btn icon>
-          <v-icon @click="dialog = true">mdi-plus</v-icon>
+          <v-icon @click="createPlatform">mdi-plus</v-icon>
         </v-btn>
       </v-subheader>
       <v-list-item v-for="platform in platforms" :key="platform.id">
@@ -18,7 +18,7 @@
         <v-list-item-action>
           <v-row>
             <v-btn icon>
-              <v-icon @click="editAlbum(platform)">mdi-pencil</v-icon>
+              <v-icon @click="editPlatform(platform)">mdi-pencil</v-icon>
             </v-btn>
             <v-btn icon>
               <v-icon @click="deletePlatform(platform.id)">mdi-delete</v-icon>
@@ -29,10 +29,11 @@
     </v-list>
     <!-- PopUpDialog -->
     <v-dialog
-      v-model="dialog"
+      v-model="showDialog"
       persistent
       max-width="500px"
-      @keydown.esc="dialog = false"
+      @keydown.esc="this.showDialog = false"
+      @keydown.enter="savePlatform(editedItem)"
     >
       <v-card>
         <v-card-title>
@@ -48,6 +49,9 @@
                   autofocus
                 />
               </v-col>
+              <v-col cols="12" sm="6">
+                <v-text-field label="Icon" v-model="editedItem.icon" />
+              </v-col>
             </v-row>
           </v-container>
         </v-card-text>
@@ -59,7 +63,7 @@
           <v-btn
             color="blue darken-1"
             text
-            @click="savePlatform()"
+            @click="savePlatform(editedItem)"
             :disabled="isSavingValid"
           >
             Save
@@ -71,63 +75,50 @@
 </template>
 
 <script>
-import db from "@/firebase/config";
+import FirestoreService from "@/services/FirestoreService.js";
+import { Platform, EditMode } from "@/models/dbModels.js";
 
 export default {
   data() {
     return {
-      dialog: false,
-      editedIndex: -1,
-      editedItem: {
-        name: "",
-      },
-      defaultItem: {
-        name: "",
-      },
+      dialogMode: EditMode.new,
+      showDialog: false,
+      editedItem: new Platform(),
+      defaultItem: new Platform(),
     };
   },
   methods: {
-    savePlatform() {
-      //method to update platform
-      if (this.editedIndex > -1) {
-        //Update exisiting item
-        db.collection("platform").doc(this.editedItem.id).update({
-          name: this.editedItem.name,
-        });
-        this.platforms.splice(this.editedIndex, 1, this.editedItem);
+    createPlatform() {
+      this.dialogMode = EditMode.new;
+
+      this.showDialog = true;
+    },
+    async savePlatform(platform) {
+      console.log(platform);
+      if (this.dialogMode == EditMode.edit) {
+        await FirestoreService.updatePlatform(platform);
       } else {
-        //Create new Item
-        db.collection("platform")
-          .add({
-            name: this.editedItem.name,
-          })
-          .then((response) => {
-            var newPlatform = { name: this.editedItem.name, id: response.id };
-            this.platforms.push(newPlatform);
-          });
+        await FirestoreService.addPlatform(platform);
       }
+      this.platforms = await FirestoreService.getDocuments("platform");
       this.closeDialog();
     },
-    deletePlatform(id) {
-      db.collection("platform")
-        .doc(id)
-        .delete()
-        .then(() => {
-          this.platforms = this.platforms.filter((platform) => {
-            return platform.id != id;
-          });
-        });
-    },
-    editAlbum(platform) {
+    editPlatform(platform) {
+      this.dialogMode = EditMode.edit;
       this.editedIndex = this.platforms.indexOf(platform);
       this.editedItem = Object.assign({}, platform);
-      this.dialog = true;
+      this.showDialog = true;
+    },
+    async deletePlatform(id) {
+      await FirestoreService.deletePlatform(id);
+      this.platforms = this.platforms.filter((platform) => {
+        return platform.id != id;
+      });
     },
     closeDialog() {
-      this.dialog = false;
+      this.showDialog = false;
       setTimeout(() => {
-        this.editedItem = Object.assign({}, this.defaultItem);
-        this.editedIndex = -1;
+        this.editedItem = Object.assign({}, new Platform());
       }, 300);
     },
   },
@@ -138,7 +129,9 @@ export default {
       } else return true;
     },
     formTitle() {
-      return this.editedIndex === -1 ? "New Platform" : "Update Platform";
+      return this.dialogMode == EditMode.new
+        ? "New Platform"
+        : "Update Platform";
     },
     platforms: {
       get() {
@@ -146,11 +139,6 @@ export default {
       },
       set(platforms) {
         this.$store.commit("setPlatforms", platforms);
-      },
-    },
-    user: {
-      get() {
-        return this.$store.state.user;
       },
     },
   },
