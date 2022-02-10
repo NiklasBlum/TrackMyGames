@@ -16,19 +16,38 @@ class Account {
 }
 
 class Game {
-    constructor(id, name, platform, account, isFinished, createdAt) {
+    constructor(id, name, platform, account, editedAt, createdAt, playType) {
         this.id = id;
         this.name = name;
         this.platform = platform;
         this.account = account;
-        this.isFinished = isFinished;
-        this.createdAt = createdAt
+        this.editedAt = editedAt;
+        this.playType = playType;
+        this.createdAt = createdAt;
     }
 }
+
+class PlayMode {
+    constructor(playType, title, description, icon) {
+        this.playType = playType;
+        this.title = title;
+        this.description = description;
+        this.icon = icon;
+    }
+}
+
+const PlayType = {
+    uncategorized: 'uncategorized',
+    currentlyPlaying: "currentlyPlaying",
+    completed: "completed",
+    played: "played",
+    notPlayed: "notPlayed",
+    wishlist: "wishlist"
+};
 
 const EditMode = {
     new: 'new',
     edit: 'edit',
 };
 
-export { Platform, Account, Game, EditMode }
+export { Platform, Account, Game, PlayMode, PlayType, EditMode, }

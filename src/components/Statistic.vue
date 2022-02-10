@@ -4,6 +4,7 @@
       <v-icon left>mdi-check-all</v-icon>
       {{ finished }} / {{ total }} games finished
     </v-chip>
+
     <v-progress-linear :value="proportion" color="success" height="20" />
   </div>
 </template>

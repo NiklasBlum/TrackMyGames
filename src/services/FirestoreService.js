@@ -82,14 +82,16 @@ export default {
 
     //Platform -------------------------------------------------------------------------------------------------------------------------------Platform Start
     async addGame(game) {
+        console.log(game);
         return await firestore
             .collection("games")
             .add({
                 name: game.name,
                 platform: game.platform == undefined ? "" : game.platform,
                 account: game.account == undefined ? "" : game.account,
-                isFinished: game.isFinished == undefined ? false : game.isFinished,
+                editedAt: fsTimestamp(),
                 userId: store.state.user.uid,
+                playType: game.playType,
                 createdAt: fsTimestamp()
             });
     },
@@ -104,7 +106,7 @@ export default {
             name: game.name,
             platform: game.platform,
             account: game.account,
-            isFinished: game.isFinished,
+            playType: game.playType,
             editedAt: fsTimestamp()
         });
     },

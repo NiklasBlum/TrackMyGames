@@ -2,7 +2,7 @@
   <v-container>
     <v-list>
       <v-subheader>
-        Platforms
+        {{ platforms.length }} Platforms
         <v-spacer />
         <v-btn icon>
           <v-icon @click="openDialog">mdi-plus</v-icon>
@@ -67,7 +67,7 @@
             color="blue darken-1"
             text
             @click="savePlatform(platformItem)"
-            :disabled="isSavingValid"
+            :disabled="!isSavingValid"
           >
             Save
           </v-btn>
@@ -123,9 +123,10 @@ export default {
   },
   computed: {
     isSavingValid() {
-      if (this.platformItem.name != "") {
+      if (this.platformItem.name == undefined || this.platformItem.name == "") {
         return false;
-      } else return true;
+      }
+      return true;
     },
     formTitle() {
       return this.dialogMode == EditMode.new

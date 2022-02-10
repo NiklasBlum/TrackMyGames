@@ -2,7 +2,7 @@
   <v-container>
     <v-list>
       <v-subheader>
-        Accounts
+        {{ accounts.length }} Accounts
         <v-spacer />
         <v-btn icon>
           <v-icon @click="openDialog">mdi-plus</v-icon>
@@ -61,7 +61,7 @@
             color="blue darken-1"
             text
             @click="saveAccount(accountItem)"
-            :disabled="isSavingValid"
+            :disabled="!isSavingValid"
           >
             Save
           </v-btn>
@@ -117,9 +117,10 @@ export default {
   },
   computed: {
     isSavingValid() {
-      if (this.accountItem.name != "") {
+      if (this.accountItem.name == undefined || this.accountItem.name == "") {
         return false;
-      } else return true;
+      }
+      return true;
     },
     formTitle() {
       return this.dialogMode == EditMode.new ? "New Account" : "Update Account";
