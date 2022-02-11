@@ -28,11 +28,12 @@ class Game {
 }
 
 class PlayMode {
-    constructor(playType, title, description, icon) {
+    constructor(playType, title, description, icon, color) {
         this.playType = playType;
         this.title = title;
         this.description = description;
         this.icon = icon;
+        this.color = color;
     }
 }
 

@@ -64,8 +64,12 @@
         <v-icon @click="deleteGame(item.id)">mdi-delete</v-icon>
       </template>
       <template v-slot:item.playType="{ item }">
-        <!-- TODO: Iterate through all playTypes and check for matching -->
-        {{ item.playType }}
+        <v-icon
+          size="30"
+          :color="playModes.find((x) => x.playType == item.playType).color"
+        >
+          {{ playModes.find((x) => x.playType == item.playType).icon }}</v-icon
+        >
       </template>
     </v-data-table>
     <div v-if="showDialog">
@@ -83,6 +87,7 @@
 import FirestoreService from "@/services/FirestoreService.js";
 import { Game, EditMode } from "@/models/dbModels.js";
 import EditGameDialog from "@/components/dialogs/EditGameDialog.vue";
+import { mapState } from "vuex";
 export default {
   components: {
     EditGameDialog,
@@ -104,6 +109,7 @@ export default {
     };
   },
   computed: {
+    ...mapState(["platforms", "accounts", "playModes"]),
     games: {
       get() {
         return this.$store.state.games;

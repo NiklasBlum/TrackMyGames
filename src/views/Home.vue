@@ -7,7 +7,7 @@
           <NavigationTabs />
         </v-row>
       </v-col>
-      <v-col v-show="currentView === 'games'" transition="scale-transition">
+      <v-col v-show="currentView === 'games'">
         <Statistics />
         <Games />
       </v-col>
