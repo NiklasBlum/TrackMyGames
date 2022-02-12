@@ -104,7 +104,7 @@ export default {
       this.showDialog = true;
     },
     async deleteAccount(id) {
-      await FirestoreService.deleteAccount(id);
+      await FirestoreService.deleteDocument("accounts", id);
       this.accounts = this.accounts.filter((account) => {
         return account.id != id;
       });

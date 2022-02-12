@@ -17,8 +17,9 @@
             </v-col>
             <v-col cols="12" sm="6" md="6">
               <v-select
-                v-model="gameItem.platform"
+                v-model="gameItem.platformId"
                 :items="platforms"
+                item-value="id"
                 item-text="name"
                 label="Platforms"
                 clearable
@@ -26,8 +27,9 @@
             </v-col>
             <v-col cols="12" sm="6" md="6">
               <v-select
-                v-model="gameItem.account"
+                v-model="gameItem.accountId"
                 :items="accounts"
+                item-value="id"
                 item-text="name"
                 label="Accounts"
                 clearable
@@ -70,9 +72,6 @@ export default {
   },
   components: {
     GameStateDialog,
-  },
-  data() {
-    return {};
   },
   computed: {
     ...mapState(["platforms", "accounts"]),

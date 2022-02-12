@@ -110,7 +110,7 @@ export default {
       this.showDialog = true;
     },
     async deletePlatform(id) {
-      await FirestoreService.deletePlatform(id);
+      await FirestoreService.deleteDocument("platforms", id);
       this.platforms = this.platforms.filter((platform) => {
         return platform.id != id;
       });

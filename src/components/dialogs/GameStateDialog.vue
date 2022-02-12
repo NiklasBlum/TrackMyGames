@@ -45,6 +45,7 @@ export default {
       if (this.selectedGameStateInfoIndex == -1) {
         this.selectedGameStateInfoIndex = 0;
       }
+     
     },
   },
   computed: {

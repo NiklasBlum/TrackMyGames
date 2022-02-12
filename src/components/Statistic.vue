@@ -10,7 +10,6 @@
         <span class="mt-1">
           {{ item.gameCount }}
         </span>
-
         <v-icon class="ml-1" size="40">{{ item.icon }}</v-icon>
       </v-col>
     </v-row>

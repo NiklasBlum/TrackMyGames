@@ -21,6 +21,7 @@ export default {
     },
     //User -----------------------------------------------------------------------------------------------------------------------------------User End
 
+    //Documents ------------------------------------------------------------------------------------------------------------------------------Documents Start
     async getDocuments(collectionName) {
         const query = firestore.collection(collectionName);
         const snapshot = await query.where("userId", "==", store.state.user.uid)
@@ -31,6 +32,14 @@ export default {
         })
         return mappedDocuments;
     },
+
+    async deleteDocument(collectionName, id) {
+        await firestore
+            .collection(collectionName)
+            .doc(id)
+            .delete();
+    },
+    //Documents ------------------------------------------------------------------------------------------------------------------------------Documents End
 
     //Platform -------------------------------------------------------------------------------------------------------------------------------Platform Start
     async addPlatform(platform) {
@@ -43,12 +52,7 @@ export default {
                 createdAt: fsTimestamp()
             });
     },
-    async deletePlatform(id) {
-        await firestore
-            .collection("platforms")
-            .doc(id)
-            .delete();
-    },
+
     async updatePlatform(platform) {
         await firestore.collection("platforms").doc(platform.id).update({
             name: platform.name,
@@ -67,12 +71,6 @@ export default {
                 createdAt: fsTimestamp()
             });
     },
-    async deleteAccount(id) {
-        await firestore
-            .collection("accounts")
-            .doc(id)
-            .delete();
-    },
     async updateAccount(account) {
         await firestore.collection("accounts").doc(account.id).update({
             name: account.name,
@@ -81,30 +79,24 @@ export default {
     //Account -------------------------------------------------------------------------------------------------------------------------------Account End
 
     //Game ----------------------------------------------------------------------------------------------------------------------------------Game Start
-    async addGame(game) {     
+    async addGame(game) {
         return await firestore
             .collection("games")
             .add({
                 name: game.name,
-                platform: game.platform == undefined ? "" : game.platform,
-                account: game.account == undefined ? "" : game.account,
+                platformId: game.platformId == undefined ? "" : game.platformId,
+                accountId: game.accountId == undefined ? "" : game.accountId,
                 editedAt: fsTimestamp(),
                 userId: store.state.user.uid,
                 gameState: game.gameState,
                 createdAt: fsTimestamp()
             });
     },
-    async deleteGame(id) {
-        await firestore
-            .collection("games")
-            .doc(id)
-            .delete();
-    },
     async updateGame(game) {
         await firestore.collection("games").doc(game.id).update({
             name: game.name,
-            platform: game.platform,
-            account: game.account,
+            platformId: game.platformId,
+            accountId: game.accountId,
             gameState: game.gameState,
             editedAt: fsTimestamp()
         });
