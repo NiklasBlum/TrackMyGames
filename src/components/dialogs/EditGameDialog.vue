@@ -34,9 +34,9 @@
               />
             </v-col>
             <v-col>
-              <PlayModeDialog
-                @playModeChanged="gameItem.playType = $event"
-                :playType="gameItem.playType"
+              <GameStateDialog
+                @gameStateChanged="gameItem.gameState = $event"
+                :gameState="gameItem.gameState"
               />
             </v-col>
           </v-row>
@@ -62,14 +62,14 @@
 
 <script>
 import { mapState } from "vuex";
-import PlayModeDialog from "@/components/PlayModeDialog.vue";
+import GameStateDialog from "@/components/dialogs/GameStateDialog.vue";
 export default {
   props: {
     gameItem: Object,
     showDialog: Boolean,
   },
   components: {
-    PlayModeDialog,
+    GameStateDialog,
   },
   data() {
     return {};

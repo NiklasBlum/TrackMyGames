@@ -3,37 +3,26 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
 import FirestoreService from "@/services/FirestoreService.js";
 export default {
-  data() {
-    return {
-      games: [],
-      platforms: [],
-      accounts: [],
-    };
-  },
   methods: {
     async getGames() {
-      this.games = await FirestoreService.getDocuments("games");
-      this.$store.commit("setGames", this.games);
+      const games = await FirestoreService.getDocuments("games");
+      this.$store.commit("setGames", games);
     },
     async getAccounts() {
-      this.accounts = await FirestoreService.getDocuments("accounts");
-      this.$store.commit("setAccounts", this.accounts);
+      const accounts = await FirestoreService.getDocuments("accounts");
+      this.$store.commit("setAccounts", accounts);
     },
     async getPlatforms() {
-      this.platforms = await FirestoreService.getDocuments("platforms");
-      this.$store.commit("setPlatforms", this.platforms);
+      const platforms = await FirestoreService.getDocuments("platforms");
+      this.$store.commit("setPlatforms", platforms);
     },
   },
   created() {
     this.getGames();
     this.getPlatforms();
     this.getAccounts();
-  },
-  computed: {
-    ...mapState(["user"]),
   },
 };
 </script>

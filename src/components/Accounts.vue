@@ -73,23 +73,24 @@
 
 <script>
 import FirestoreService from "@/services/FirestoreService.js";
-import { Account, EditMode } from "@/models/dbModels.js";
+import { Account } from "@/models/dbModels.js";
+import { DialogMode } from "@/models/localModels.js";
 
 export default {
   data() {
     return {
-      dialogMode: EditMode.new,
+      dialogMode: DialogMode.new,
       showDialog: false,
       accountItem: new Account(),
     };
   },
   methods: {
     openDialog() {
-      this.dialogMode = EditMode.new;
+      this.dialogMode = DialogMode.new;
       this.showDialog = true;
     },
     async saveAccount(account) {
-      if (this.dialogMode == EditMode.edit) {
+      if (this.dialogMode == DialogMode.edit) {
         await FirestoreService.updateAccount(account);
       } else {
         await FirestoreService.addAccount(account);
@@ -98,7 +99,7 @@ export default {
       this.closeDialog();
     },
     editAccount(account) {
-      this.dialogMode = EditMode.edit;
+      this.dialogMode = DialogMode.edit;
       this.accountItem = Object.assign({}, account);
       this.showDialog = true;
     },
@@ -123,7 +124,9 @@ export default {
       return true;
     },
     formTitle() {
-      return this.dialogMode == EditMode.new ? "New Account" : "Update Account";
+      return this.dialogMode == DialogMode.new
+        ? "New Account"
+        : "Update Account";
     },
     accounts: {
       get() {

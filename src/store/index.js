@@ -1,6 +1,6 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import { PlayMode, PlayType } from "@/models/dbModels.js";
+import { GameState, GameStateInfo } from "@/models/localModels.js";
 Vue.use(Vuex);
 
 export default new Vuex.Store({
@@ -10,44 +10,44 @@ export default new Vuex.Store({
     games: [],
     user: null,
     currentView: "games",
-    playModes: [
-      new PlayMode(
-        PlayType.uncategorized,
+    gameStateInfos: [
+      new GameStateInfo(
+        GameState.uncategorized,
         "Uncategorized",
         "I'll pick the category later",
         "mdi-help-circle",
         "warning"
       ),
-      new PlayMode(
-        PlayType.currentlyPlaying,
+      new GameStateInfo(
+        GameState.currentlyPlaying,
         "Currently playing",
         "I play the game regularly",
         "mdi-google-controller",
         "cyan"
       ),
-      new PlayMode(
-        PlayType.completed,
+      new GameStateInfo(
+        GameState.completed,
         "Completed",
         "I reached my goal in the game",
         "mdi-medal",
         "success"
       ),
-      new PlayMode(
-        PlayType.played,
+      new GameStateInfo(
+        GameState.played,
         "Played",
         "Won't play anymore",
         "mdi-spider-web",
-        "light-gray"
+        "grey"
       ),
-      new PlayMode(
-        PlayType.notPlayed,
+      new GameStateInfo(
+        GameState.notPlayed,
         "Not played",
         "I'll play it later",
         "mdi-archive-plus",
         "purple"
       ),
-      new PlayMode(
-        PlayType.wishlist,
+      new GameStateInfo(
+        GameState.wishlist,
         "Wishlist",
         "I want to buy this game",
         "mdi-cart-plus",

@@ -2,12 +2,16 @@
   <div class="mt-3">
     <v-row no-gutters align="center" justify="center">
       <v-col
-        v-for="playCount in playCounts"
-        :key="playCount.playType"
+        v-for="item in gameStateStatistics"
+        :key="item.icon"
         class="text-center display-1 py-3"
-        :class="playCount.color"
+        :class="item.color"
       >
-        {{ playCount.playCount }}<v-icon class="ml-1">{{ playCount.icon }}</v-icon>
+        <span class="mt-1">
+          {{ item.gameCount }}
+        </span>
+
+        <v-icon class="ml-1" size="40">{{ item.icon }}</v-icon>
       </v-col>
     </v-row>
   </div>
@@ -15,31 +19,29 @@
 
 <script>
 import { mapState } from "vuex";
-import { PlayType } from "@/models/dbModels.js";
 export default {
   data() {
     return {
-      playCounts: [],
+      gameStateStatistics: [],
     };
   },
   methods: {
     getProportion(count) {
-      return (count / this.games.length) * 100;
+      return (count / this.totalGamesAmount) * 100;
     },
     calculateStatistics() {
-      this.playCounts = [];
-      for (const key in this.playModes) {
-        const playMode = this.playModes[key];
+      this.gameStateStatistics = [];
+      for (const key in this.gameStateInfos) {
+        const gameStateInfo = this.gameStateInfos[key];
         var gameCount = this.games.filter((game) => {
-          return game.playType == playMode.playType;
+          return game.gameState == gameStateInfo.gameState;
         });
         var obj = {
-          playCount: gameCount.length,
-          icon: playMode.icon,
-          color: playMode.color,
-          playType: playMode.playType,
+          gameCount: gameCount.length,
+          icon: gameStateInfo.icon,
+          color: gameStateInfo.color,
         };
-        this.playCounts.push(obj);
+        this.gameStateStatistics.push(obj);
       }
     },
   },
@@ -52,27 +54,12 @@ export default {
     this.calculateStatistics();
   },
   computed: {
-    ...mapState(["games", "playModes"]),
-    finished() {
-      return this.games.filter((game) => {
-        return game.playType == PlayType.completed;
-      }).length;
-    },
-    uncategorized() {
-      return this.games.filter((game) => {
-        return game.playType == PlayType.uncategorized;
-      }).length;
-    },
-    currentlyPlaying() {
-      return this.games.filter((game) => {
-        return game.playType == PlayType.currentlyPlaying;
-      }).length;
-    },
-    total() {
+    ...mapState(["games", "gameStateInfos"]),
+    totalGamesAmount() {
       return this.games.length;
     },
     proportion() {
-      return (this.finished / this.total) * 100;
+      return (this.finished / this.totalGamesAmount) * 100;
     },
   },
 };

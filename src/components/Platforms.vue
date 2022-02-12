@@ -79,23 +79,24 @@
 
 <script>
 import FirestoreService from "@/services/FirestoreService.js";
-import { Platform, EditMode } from "@/models/dbModels.js";
+import { Platform } from "@/models/dbModels.js";
+import { DialogMode } from "@/models/localModels.js";
 
 export default {
   data() {
     return {
-      dialogMode: EditMode.new,
+      dialogMode: DialogMode.new,
       showDialog: false,
       platformItem: new Platform(),
     };
   },
   methods: {
     openDialog() {
-      this.dialogMode = EditMode.new;
+      this.dialogMode = DialogMode.new;
       this.showDialog = true;
     },
     async savePlatform(platform) {
-      if (this.dialogMode == EditMode.edit) {
+      if (this.dialogMode == DialogMode.edit) {
         await FirestoreService.updatePlatform(platform);
       } else {
         await FirestoreService.addPlatform(platform);
@@ -104,7 +105,7 @@ export default {
       this.closeDialog();
     },
     editPlatform(platform) {
-      this.dialogMode = EditMode.edit;
+      this.dialogMode = DialogMode.edit;
       this.platformItem = Object.assign({}, platform);
       this.showDialog = true;
     },
@@ -129,7 +130,7 @@ export default {
       return true;
     },
     formTitle() {
-      return this.dialogMode == EditMode.new
+      return this.dialogMode == DialogMode.new
         ? "New Platform"
         : "Update Platform";
     },

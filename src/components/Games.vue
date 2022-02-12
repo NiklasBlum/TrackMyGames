@@ -2,11 +2,10 @@
   <div>
     <v-data-table
       :dense="isDense"
-      :headers="headers"
+      :headers="tableHeaders"
       :items="games"
       :items-per-page="15"
       :search="search"
-      sort-by="Finished"
       ><template v-slot:top>
         <v-toolbar flat>
           <v-toolbar-title>{{ games.length }} Games</v-toolbar-title>
@@ -63,29 +62,32 @@
         <v-icon class="mr-2" @click="editGame(item)">mdi-pencil</v-icon>
         <v-icon @click="deleteGame(item.id)">mdi-delete</v-icon>
       </template>
-      <template v-slot:item.playType="{ item }">
+      <template v-slot:item.gameState="{ item }">
         <v-icon
           size="30"
-          :color="playModes.find((x) => x.playType == item.playType).color"
+          :color="
+            gameStateInfos.find((x) => x.gameState == item.gameState).color
+          "
         >
-          {{ playModes.find((x) => x.playType == item.playType).icon }}</v-icon
-        >
+          {{ gameStateInfos.find((x) => x.gameState == item.gameState).icon }}
+        </v-icon>
+         {{ gameStateInfos.find((x) => x.gameState == item.gameState).title }}
       </template>
     </v-data-table>
-    <div v-if="showDialog">
-      <EditGameDialog
-        :showDialog="showDialog"
-        :gameItem="gameItem"
-        @saved="saveGame"
-        @closed="closeDialog"
-      />
-    </div>
+
+    <EditGameDialog
+      :showDialog="showDialog"
+      :gameItem="gameItem"
+      @saved="saveGame"
+      @closed="closeDialog"
+    />
   </div>
 </template>
 
 <script>
 import FirestoreService from "@/services/FirestoreService.js";
-import { Game, EditMode } from "@/models/dbModels.js";
+import { Game } from "@/models/dbModels.js";
+import { DialogMode } from "@/models/localModels.js";
 import EditGameDialog from "@/components/dialogs/EditGameDialog.vue";
 import { mapState } from "vuex";
 export default {
@@ -94,14 +96,14 @@ export default {
   },
   data() {
     return {
-      headers: [
+      tableHeaders: [
         { text: "Game", align: "left", value: "name" },
         { text: "Platform", value: "platform" },
         { text: "Account", value: "account" },
-        { text: "PlayType", value: "playType" },
+        { text: "GameState", value: "gameState" },
         { text: "Actions", value: "action", sortable: false },
       ],
-      dialogMode: EditMode.new,
+      dialogMode: DialogMode.new,
       isDense: false,
       search: "",
       showDialog: false,
@@ -109,7 +111,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["platforms", "accounts", "playModes"]),
+    ...mapState(["platforms", "accounts", "gameStateInfos"]),
     games: {
       get() {
         return this.$store.state.games;
@@ -118,25 +120,14 @@ export default {
         this.$store.commit("setGames", games);
       },
     },
-    platforms: {
-      get() {
-        return this.$store.state.platforms;
-      },
-    },
-    accounts: {
-      get() {
-        return this.$store.state.accounts;
-      },
-    },
   },
   methods: {
     openDialog() {
-      this.dialogMode = EditMode.new;
+      this.dialogMode = DialogMode.new;
       this.showDialog = true;
     },
     async saveGame(game) {
-      console.log(game);
-      if (this.dialogMode == EditMode.edit) {
+      if (this.dialogMode == DialogMode.edit) {
         await FirestoreService.updateGame(game);
       } else {
         await FirestoreService.addGame(game);
@@ -145,7 +136,7 @@ export default {
       this.games = await FirestoreService.getDocuments("games");
     },
     editGame(game) {
-      this.dialogMode = EditMode.edit;
+      this.dialogMode = DialogMode.edit;
       this.gameItem = Object.assign({}, game);
       this.showDialog = true;
     },

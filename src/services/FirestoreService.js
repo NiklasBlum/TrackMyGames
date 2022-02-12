@@ -57,7 +57,7 @@ export default {
     },
     //Platform -------------------------------------------------------------------------------------------------------------------------------Platform End
 
-    //Platform -------------------------------------------------------------------------------------------------------------------------------Platform Start
+    //Account --------------------------------------------------------------------------------------------------------------------------------Account Start
     async addAccount(account) {
         return await firestore
             .collection("accounts")
@@ -80,9 +80,8 @@ export default {
     },
     //Account -------------------------------------------------------------------------------------------------------------------------------Account End
 
-    //Platform -------------------------------------------------------------------------------------------------------------------------------Platform Start
-    async addGame(game) {
-        console.log(game);
+    //Game ----------------------------------------------------------------------------------------------------------------------------------Game Start
+    async addGame(game) {     
         return await firestore
             .collection("games")
             .add({
@@ -91,7 +90,7 @@ export default {
                 account: game.account == undefined ? "" : game.account,
                 editedAt: fsTimestamp(),
                 userId: store.state.user.uid,
-                playType: game.playType,
+                gameState: game.gameState,
                 createdAt: fsTimestamp()
             });
     },
@@ -106,9 +105,9 @@ export default {
             name: game.name,
             platform: game.platform,
             account: game.account,
-            playType: game.playType,
+            gameState: game.gameState,
             editedAt: fsTimestamp()
         });
     },
-    //Account -------------------------------------------------------------------------------------------------------------------------------Account End
+    //Game -------------------------------------------------------------------------------------------------------------------------------Game End
 }
