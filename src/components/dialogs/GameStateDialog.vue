@@ -4,7 +4,7 @@
       <v-list-item
         v-for="gameStateInfo in this.gameStateInfos"
         :key="gameStateInfo.id"
-        @click="emitGameState(gameStateInfo.gameState)"
+        @click="emitGameState(gameStateInfo.id)"
       >
         <v-list-item-icon>
           <v-icon
@@ -25,7 +25,7 @@
 import { mapState } from "vuex";
 export default {
   props: {
-    gameState: String,
+    gameStateId: String,
   },
   data() {
     return {
@@ -33,18 +33,20 @@ export default {
     };
   },
   methods: {
-    emitGameState(gameState) {
-      this.$emit("gameStateChanged", gameState);
+    emitGameState(id) {
+      this.$emit("gameStateIdChanged", id);
     },
     selectGameStateInfo() {
+      console.log("check");
       this.selectedGameStateInfoIndex = this.gameStateInfos.findIndex(
-        (object) => {
-          return object.gameState === this.gameState;
-        }
+        (item) => item.id === this.gameStateId
       );
       if (this.selectedGameStateInfoIndex == -1) {
         this.selectedGameStateInfoIndex = 0;
       }
+      this.emitGameState(
+        this.gameStateInfos[this.selectedGameStateInfoIndex].id
+      );
     },
   },
   computed: {

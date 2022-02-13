@@ -86,9 +86,9 @@ export default {
                 name: game.name,
                 platformId: game.platformId == undefined ? "" : game.platformId,
                 accountId: game.accountId == undefined ? "" : game.accountId,
+                gameStateId: game.gameStateId == undefined ? null : game.gameStateId,
                 editedAt: fsTimestamp(),
                 userId: store.state.user.uid,
-                gameState: game.gameState,
                 createdAt: fsTimestamp()
             });
     },
@@ -97,7 +97,7 @@ export default {
             name: game.name,
             platformId: game.platformId,
             accountId: game.accountId,
-            gameState: game.gameState,
+            gameStateId: game.gameStateId,
             editedAt: fsTimestamp()
         });
     },

@@ -38,8 +38,8 @@
             <v-col>
               <GameStateDialog
                 v-if="showDialog"
-                @gameStateChanged="gameItem.gameState = $event"
-                :gameState="gameItem.gameState"
+                @gameStateIdChanged="gameItem.gameStateId = $event"
+                :gameStateId="gameItem.gameStateId"
               />
             </v-col>
           </v-row>

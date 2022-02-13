@@ -38,15 +38,20 @@
         <v-icon @click="deleteGame(item.id)">mdi-delete</v-icon>
       </template>
       <template v-slot:item.gameState="{ item }">
-        <v-icon
+        {{ item.gameStateId }}
+        <!--  <v-icon
           size="30"
           :color="
-            gameStateInfos.find((x) => x.gameState == item.gameState).color
+            gameStateInfos.find((x) => x.gameStateId == item.gameStateId).color
           "
         >
-          {{ gameStateInfos.find((x) => x.gameState == item.gameState).icon }}
+          {{
+            gameStateInfos.find((x) => x.gameStateId == item.gameStateId).icon
+          }}
         </v-icon>
-        {{ gameStateInfos.find((x) => x.gameState == item.gameState).title }}
+        {{
+          gameStateInfos.find((x) => x.gameStateId == item.gameStateId).title
+        }}-->
       </template>
     </v-data-table>
 
