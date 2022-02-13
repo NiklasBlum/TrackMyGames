@@ -1,6 +1,6 @@
 <template>
   <v-icon size="30" v-if="this.platform">{{ this.platform.icon }}</v-icon>
-  <div v-else>-</div>
+  <div v-else class="red--text">not found!</div>
 </template>
 
 <script>
