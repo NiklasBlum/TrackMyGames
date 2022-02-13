@@ -37,7 +37,6 @@ export default {
       this.$emit("gameStateIdChanged", id);
     },
     selectGameStateInfo() {
-      console.log("check");
       this.selectedGameStateInfoIndex = this.gameStateInfos.findIndex(
         (item) => item.id === this.gameStateId
       );

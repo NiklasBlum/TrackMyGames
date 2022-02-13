@@ -1,5 +1,12 @@
 <template>
-  <v-icon size="30" v-if="this.platform">{{ this.platform.icon }}</v-icon>
+  <v-tooltip v-if="this.platform" left color="primary">
+    <template v-slot:activator="{ on, attrs }">
+      <span v-bind="attrs" v-on="on">
+        <v-icon size="30">{{ platform.icon }}</v-icon>
+      </span>
+    </template>
+    <span>{{ platform.name }}</span>
+  </v-tooltip>
   <div v-else class="red--text">not found!</div>
 </template>
 
@@ -27,6 +34,11 @@ export default {
   },
   computed: {
     ...mapState(["platforms"]),
+  },
+  watch: {
+    platformId() {
+      this.getPlatform();
+    },
   },
 };
 </script>

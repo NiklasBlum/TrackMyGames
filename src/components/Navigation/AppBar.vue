@@ -1,10 +1,8 @@
 <template>
   <v-app-bar app>
     <v-toolbar-title>
-      <router-link class="routerLink" to="/" style="cursor: pointer">
-        <v-icon large>mdi-google-controller</v-icon>
-        TrackMyGames
-      </router-link>
+      <v-icon large>mdi-google-controller</v-icon>
+      TrackMyGames
     </v-toolbar-title>
     <v-spacer />
     <v-menu left bottom v-if="user">
@@ -34,9 +32,3 @@ export default {
   },
 };
 </script>
-<style scoped>
-.routerLink {
-  text-decoration: none;
-  color: white;
-}
-</style>

@@ -28,5 +28,10 @@ export default {
   computed: {
     ...mapState(["accounts"]),
   },
+  watch: {
+    accountId() {
+      this.getAccount();
+    },
+  },
 };
 </script>

@@ -4,7 +4,7 @@
       :dense="isDense"
       :headers="tableHeaders"
       :items="games"
-      :items-per-page="15"
+      :items-per-page="20"
       :search="search"
       ><template v-slot:top>
         <v-toolbar flat>
@@ -38,20 +38,10 @@
         <v-icon @click="deleteGame(item.id)">mdi-delete</v-icon>
       </template>
       <template v-slot:item.gameState="{ item }">
-        {{ item.gameStateId }}
-        <!--  <v-icon
-          size="30"
-          :color="
-            gameStateInfos.find((x) => x.gameStateId == item.gameStateId).color
-          "
-        >
-          {{
-            gameStateInfos.find((x) => x.gameStateId == item.gameStateId).icon
-          }}
-        </v-icon>
-        {{
-          gameStateInfos.find((x) => x.gameStateId == item.gameStateId).title
-        }}-->
+        <GameStateInfo
+          v-if="item.gameStateId"
+          :gameStateId="item.gameStateId"
+        />
       </template>
     </v-data-table>
 
@@ -71,12 +61,14 @@ import { DialogMode } from "@/models/localModels.js";
 import GameEditDialog from "@/components/dialogs/GameEditDialog.vue";
 import PlatformIcon from "@/components/PlatformIcon.vue";
 import AccountName from "@/components/AccountName.vue";
+import GameStateInfo from "@/components/GameStateInfo.vue";
 import { mapState } from "vuex";
 export default {
   components: {
     GameEditDialog,
     PlatformIcon,
     AccountName,
+    GameStateInfo,
   },
   data() {
     return {
@@ -88,7 +80,7 @@ export default {
         { text: "Actions", value: "action", sortable: false },
       ],
       dialogMode: DialogMode.new,
-      isDense: false,
+      isDense: true,
       search: "",
       showDialog: false,
       gameItem: new Game(),

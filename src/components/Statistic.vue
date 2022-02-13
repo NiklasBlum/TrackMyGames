@@ -33,7 +33,7 @@ export default {
       for (const key in this.gameStateInfos) {
         const gameStateInfo = this.gameStateInfos[key];
         var gameCount = this.games.filter((game) => {
-          return game.gameState == gameStateInfo.gameState;
+          return game.gameStateId == gameStateInfo.id;
         });
         var obj = {
           gameCount: gameCount.length,
