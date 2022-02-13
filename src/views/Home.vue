@@ -1,45 +1,61 @@
 <template>
   <div>
-    <Startup />
-    <v-row no-gutters>
-      <v-col cols="12">
-        <v-row no-gutters justify="center">
-          <NavigationTabs />
-        </v-row>
-      </v-col>
-      <v-col v-show="currentView === 'games'" transition="scale-transition">
+    <v-tabs fixed-tabs centered v-model="tab">
+      <v-tab>Games</v-tab>
+      <v-tab>Accounts</v-tab>
+      <v-tab>Platforms</v-tab>
+    </v-tabs>
+    <v-tabs-items v-model="tab">
+      <v-tab-item>
         <Statistics />
         <Games />
-      </v-col>
-      <v-col v-show="currentView === 'accounts'">
+      </v-tab-item>
+      <v-tab-item>
         <Accounts />
-      </v-col>
-      <v-col v-show="currentView === 'platforms'">
+      </v-tab-item>
+      <v-tab-item>
         <Platforms />
-      </v-col>
-    </v-row>
+      </v-tab-item>
+    </v-tabs-items>
   </div>
 </template>
 
 <script>
-import Startup from "@/components/Startup.vue";
-import Games from "@/components/Games.vue";
-import Accounts from "@/components/Accounts.vue";
-import Platforms from "@/components/Platforms.vue";
+import Games from "@/views/Games.vue";
+import Accounts from "@/views/Accounts.vue";
+import Platforms from "@/views/Platforms.vue";
 import Statistics from "@/components/Statistic.vue";
-import NavigationTabs from "@/components/Navigation/NavigationTabs.vue";
-import { mapState } from "vuex";
+import FirestoreService from "@/services/FirestoreService.js";
 export default {
   components: {
-    Startup,
     Games,
     Accounts,
     Platforms,
     Statistics,
-    NavigationTabs,
   },
-  computed: {
-    ...mapState(["currentView"]),
+  data() {
+    return {
+      tab: null,
+    };
+  },
+  methods: {
+    async getPlatforms() {
+      const platforms = await FirestoreService.getDocuments("platforms");
+      this.$store.commit("setPlatforms", platforms);
+    },
+    async getGames() {
+      const games = await FirestoreService.getDocuments("games");
+      this.$store.commit("setGames", games);
+    },
+    async getAccounts() {
+      const accounts = await FirestoreService.getDocuments("accounts");
+      this.$store.commit("setAccounts", accounts);
+    },
+  },
+  mounted() {
+    this.getPlatforms();
+    this.getAccounts();
+    this.getGames();
   },
 };
 </script>

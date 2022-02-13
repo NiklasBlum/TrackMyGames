@@ -12,8 +12,8 @@ var config = {
   appId: "1:847550259729:web:ae12f6aadc1fd01d2387b0",
   measurementId: "G-NS7MJEJD19"
 };
-// Initialize Firebase
-const firebaseApp = firebase.initializeApp(config);
+
+firebase.initializeApp(config);
 
 firebase.getCurrentUser = () => {
   return new Promise((resolve, reject) => {
@@ -24,4 +24,11 @@ firebase.getCurrentUser = () => {
   });
 };
 
-export default firebaseApp.firestore();
+const firestore = firebase.firestore();
+const fsTimestamp = firebase.firestore.FieldValue.serverTimestamp;
+
+//this exports two objects. When importing, the names must be the same
+export { firestore, fsTimestamp }
+
+// this is a default export. It exports the value, so when importing the variable name can be named differently
+// export default firestore

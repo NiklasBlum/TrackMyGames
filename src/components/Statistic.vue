@@ -1,32 +1,65 @@
 <template>
-  <div>
-    <v-chip color="success" class="mb-3">
-      <v-icon left>mdi-check-all</v-icon>
-      {{ finished }} / {{ total }} games finished
-    </v-chip>
-    <v-progress-linear :value="proportion" color="success" height="20" />
+  <div class="mt-3">
+    <v-row no-gutters align="center" justify="center">
+      <v-col
+        v-for="item in gameStateStatistics"
+        :key="item.icon"
+        class="text-center display-1 py-3"
+        :class="item.color"
+      >
+        <span class="mt-1">
+          {{ item.gameCount }}
+        </span>
+        <v-icon class="ml-1" size="40">{{ item.icon }}</v-icon>
+      </v-col>
+    </v-row>
   </div>
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
-  computed: {
-    games: {
-      get() {
-        return this.$store.state.games;
+  data() {
+    return {
+      gameStateStatistics: [],
+    };
+  },
+  methods: {
+    getProportion(count) {
+      return (count / this.totalGamesAmount) * 100;
+    },
+    calculateStatistics() {
+      this.gameStateStatistics = [];
+      for (const key in this.gameStateInfos) {
+        const gameStateInfo = this.gameStateInfos[key];
+        var gameCount = this.games.filter((game) => {
+          return game.gameStateId == gameStateInfo.id;
+        });
+        var obj = {
+          gameCount: gameCount.length,
+          icon: gameStateInfo.icon,
+          color: gameStateInfo.color,
+        };
+        this.gameStateStatistics.push(obj);
       }
     },
-    finished() {
-      return this.games.filter(game => {
-        return game.Finished == true;
-      }).length;
+  },
+  watch: {
+    games() {
+      this.calculateStatistics();
     },
-    total() {
+  },
+  created() {
+    this.calculateStatistics();
+  },
+  computed: {
+    ...mapState(["games", "gameStateInfos"]),
+    totalGamesAmount() {
       return this.games.length;
     },
     proportion() {
-      return (this.finished / this.total) * 100;
-    }
-  }
+      return (this.finished / this.totalGamesAmount) * 100;
+    },
+  },
 };
 </script>

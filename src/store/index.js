@@ -1,15 +1,65 @@
 import Vue from "vue";
 import Vuex from "vuex";
-
+import { GameState, GameStateInfo } from "@/models/localModels.js";
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    platforms: null,
-    accounts: null,
-    games: null,
+    platforms: [],
+    accounts: [],
+    games: [],
     user: null,
-    currentView: "games"
+    currentView: "games",
+    gameStateInfos: [
+      new GameStateInfo(
+        "0",
+        GameState.uncategorized,
+        "Uncategorized",
+        "I'll pick the category later",
+        "mdi-help-circle",
+        "warning"
+      ),
+      new GameStateInfo(
+        "1",
+        GameState.currentlyPlaying,
+        "Currently playing",
+        "I play the game regularly",
+        "mdi-google-controller",
+        "cyan"
+      ),
+      new GameStateInfo(
+        "2",
+        GameState.completed,
+        "Completed",
+        "I reached my goal in the game",
+        "mdi-check-all",
+        "success"
+      ),
+      new GameStateInfo(
+        "3",
+        GameState.played,
+        "Played",
+        "Won't play anymore",
+        "mdi-spider-web",
+        "grey"
+      ),
+      new GameStateInfo(
+        "4",
+        GameState.notPlayed,
+        "Not played",
+        "I'll play it later",
+        "mdi-archive-plus",
+        "purple"
+      ),
+      new GameStateInfo(
+        "5",
+        GameState.wishlist,
+        "Wishlist",
+        "I want to buy this game",
+        "mdi-cart-plus",
+        "orange"
+      ),
+    ],
   },
   mutations: {
     setPlatforms(state, platforms) {
