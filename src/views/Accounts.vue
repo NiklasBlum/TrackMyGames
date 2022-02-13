@@ -1,8 +1,8 @@
 <template>
-  <v-container>
+  <div>
     <v-list>
-      <v-subheader>
-        {{ accounts.length }} Accounts
+      <v-subheader class="blue">
+        <div>{{ accounts.length }} Accounts</div>
         <v-spacer />
         <v-btn icon>
           <v-icon @click="openDialog">mdi-plus</v-icon>
@@ -68,7 +68,7 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-  </v-container>
+  </div>
 </template>
 
 <script>

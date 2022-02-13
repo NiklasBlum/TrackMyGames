@@ -28,10 +28,10 @@
         </v-toolbar>
       </template>
       <template v-slot:item.platformId="{ item }">
-        <PlatformIcon :platformId="item.platformId" />
+        <PlatformIcon v-if="item.platformId" :platformId="item.platformId" />
       </template>
       <template v-slot:item.accountId="{ item }">
-        {{ accounts.find((x) => x.id == item.accountId).name }}
+        <AccountName v-if="item.accountId" :accountId="item.accountId" />
       </template>
       <template v-slot:item.action="{ item }">
         <v-icon class="mr-2" @click="editGame(item)">mdi-pencil</v-icon>
@@ -65,11 +65,13 @@ import { Game } from "@/models/dbModels.js";
 import { DialogMode } from "@/models/localModels.js";
 import GameEditDialog from "@/components/dialogs/GameEditDialog.vue";
 import PlatformIcon from "@/components/PlatformIcon.vue";
+import AccountName from "@/components/AccountName.vue";
 import { mapState } from "vuex";
 export default {
   components: {
     GameEditDialog,
     PlatformIcon,
+    AccountName,
   },
   data() {
     return {

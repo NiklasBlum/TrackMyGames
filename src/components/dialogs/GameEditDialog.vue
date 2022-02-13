@@ -37,6 +37,7 @@
             </v-col>
             <v-col>
               <GameStateDialog
+                v-if="showDialog"
                 @gameStateChanged="gameItem.gameState = $event"
                 :gameState="gameItem.gameState"
               />

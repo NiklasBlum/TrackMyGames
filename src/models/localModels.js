@@ -1,5 +1,6 @@
 class GameStateInfo {
-    constructor(gameState, title, description, icon, color) {
+    constructor(id, gameState, title, description, icon, color) {
+        this.id = id;
         this.gameState = gameState;
         this.title = title;
         this.description = description;

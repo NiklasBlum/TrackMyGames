@@ -30,3 +30,10 @@ export default {
   computed: { ...mapState(["user"]) },
 };
 </script>
+
+<style >
+html::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+</style>

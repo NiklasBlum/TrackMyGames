@@ -1,5 +1,6 @@
 <template>
-  <v-icon size="30">{{ this.platform.icon }}</v-icon>
+  <v-icon size="30" v-if="this.platform">{{ this.platform.icon }}</v-icon>
+  <div v-else>-</div>
 </template>
 
 <script>

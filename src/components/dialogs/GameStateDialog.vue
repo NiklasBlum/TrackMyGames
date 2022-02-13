@@ -3,7 +3,7 @@
     <v-list-item-group v-model="selectedGameStateInfoIndex" mandatory>
       <v-list-item
         v-for="gameStateInfo in this.gameStateInfos"
-        :key="gameStateInfo.title"
+        :key="gameStateInfo.id"
         @click="emitGameState(gameStateInfo.gameState)"
       >
         <v-list-item-icon>
@@ -45,7 +45,6 @@ export default {
       if (this.selectedGameStateInfoIndex == -1) {
         this.selectedGameStateInfoIndex = 0;
       }
-     
     },
   },
   computed: {

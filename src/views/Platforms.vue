@@ -1,7 +1,7 @@
 <template>
-  <v-container>
+  <div>
     <v-list>
-      <v-subheader>
+      <v-subheader class="blue">
         {{ platforms.length }} Platforms
         <v-spacer />
         <v-btn icon>
@@ -74,7 +74,7 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-  </v-container>
+  </div>
 </template>
 
 <script>

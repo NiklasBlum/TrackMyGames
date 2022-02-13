@@ -1,40 +1,42 @@
 <template>
   <div>
-    <v-row no-gutters>
-      <v-col cols="12">
-        <v-row no-gutters justify="center">
-          <NavigationTabs />
-        </v-row>
-      </v-col>
-      <v-col v-show="currentView === 'games'">
+    <v-tabs fixed-tabs centered v-model="tab">
+      <v-tab>Games</v-tab>
+      <v-tab>Accounts</v-tab>
+      <v-tab>Platforms</v-tab>
+    </v-tabs>
+    <v-tabs-items v-model="tab">
+      <v-tab-item>
         <Statistics />
         <Games />
-      </v-col>
-      <v-col v-show="currentView === 'accounts'">
+      </v-tab-item>
+      <v-tab-item>
         <Accounts />
-      </v-col>
-      <v-col v-show="currentView === 'platforms'">
+      </v-tab-item>
+      <v-tab-item>
         <Platforms />
-      </v-col>
-    </v-row>
+      </v-tab-item>
+    </v-tabs-items>
   </div>
 </template>
 
 <script>
-import Games from "@/components/Games.vue";
-import Accounts from "@/components/Accounts.vue";
-import Platforms from "@/components/Platforms.vue";
+import Games from "@/views/Games.vue";
+import Accounts from "@/views/Accounts.vue";
+import Platforms from "@/views/Platforms.vue";
 import Statistics from "@/components/Statistic.vue";
-import NavigationTabs from "@/components/Navigation/NavigationTabs.vue";
 import FirestoreService from "@/services/FirestoreService.js";
-import { mapState } from "vuex";
 export default {
   components: {
     Games,
     Accounts,
     Platforms,
     Statistics,
-    NavigationTabs,
+  },
+  data() {
+    return {
+      tab: null,
+    };
   },
   methods: {
     async getPlatforms() {
@@ -54,9 +56,6 @@ export default {
     this.getPlatforms();
     this.getAccounts();
     this.getGames();
-  },
-  computed: {
-    ...mapState(["currentView"]),
   },
 };
 </script>

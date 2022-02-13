@@ -12,6 +12,7 @@ export default new Vuex.Store({
     currentView: "games",
     gameStateInfos: [
       new GameStateInfo(
+        "0",
         GameState.uncategorized,
         "Uncategorized",
         "I'll pick the category later",
@@ -19,6 +20,7 @@ export default new Vuex.Store({
         "warning"
       ),
       new GameStateInfo(
+        "1",
         GameState.currentlyPlaying,
         "Currently playing",
         "I play the game regularly",
@@ -26,6 +28,7 @@ export default new Vuex.Store({
         "cyan"
       ),
       new GameStateInfo(
+        "2",
         GameState.completed,
         "Completed",
         "I reached my goal in the game",
@@ -33,6 +36,7 @@ export default new Vuex.Store({
         "success"
       ),
       new GameStateInfo(
+        "3",
         GameState.played,
         "Played",
         "Won't play anymore",
@@ -40,6 +44,7 @@ export default new Vuex.Store({
         "grey"
       ),
       new GameStateInfo(
+        "4",
         GameState.notPlayed,
         "Not played",
         "I'll play it later",
@@ -47,6 +52,7 @@ export default new Vuex.Store({
         "purple"
       ),
       new GameStateInfo(
+        "5",
         GameState.wishlist,
         "Wishlist",
         "I want to buy this game",
