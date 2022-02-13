@@ -4,9 +4,14 @@
       :dense="isDense"
       :headers="tableHeaders"
       :items="games"
+      :sort-by="'gameStateId'"
       :items-per-page="20"
+      :footer-props="{
+        'items-per-page-options': [10, 20, 30, 40, 50],
+      }"
       :search="search"
-      ><template v-slot:top>
+    >
+      <template v-slot:top>
         <v-toolbar flat>
           <v-toolbar-title>{{ games.length }} Games</v-toolbar-title>
           <v-spacer />
@@ -33,15 +38,18 @@
       <template v-slot:item.accountId="{ item }">
         <AccountName v-if="item.accountId" :accountId="item.accountId" />
       </template>
-      <template v-slot:item.action="{ item }">
-        <v-icon class="mr-2" @click="editGame(item)">mdi-pencil</v-icon>
-        <v-icon @click="deleteGame(item.id)">mdi-delete</v-icon>
-      </template>
-      <template v-slot:item.gameState="{ item }">
+      <template v-slot:item.gameStateId="{ item }">
         <GameStateInfo
           v-if="item.gameStateId"
           :gameStateId="item.gameStateId"
         />
+      </template>
+      <template v-slot:item.editedAt="{ item }">
+        {{ item.createdAt.toDate().toLocaleDateString("de-DE") }}
+      </template>
+      <template v-slot:item.action="{ item }">
+        <v-icon class="mr-2" @click="editGame(item)">mdi-pencil</v-icon>
+        <v-icon @click="deleteGame(item.id)">mdi-delete</v-icon>
       </template>
     </v-data-table>
 
@@ -76,7 +84,8 @@ export default {
         { text: "Game", align: "left", value: "name" },
         { text: "Platform", value: "platformId" },
         { text: "Account", value: "accountId" },
-        { text: "GameState", value: "gameState" },
+        { text: "GameState", value: "gameStateId" },
+        { text: "EditedAt", value: "editedAt" },
         { text: "Actions", value: "action", sortable: false },
       ],
       dialogMode: DialogMode.new,
