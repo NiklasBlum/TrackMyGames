@@ -32,7 +32,7 @@ export default new Vuex.Store({
         GameState.completed,
         "Completed",
         "I reached my goal in the game",
-        "mdi-medal",
+        "mdi-check-all",
         "success"
       ),
       new GameStateInfo(
