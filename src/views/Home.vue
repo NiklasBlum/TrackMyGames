@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <v-container fluid>
     <v-tabs fixed-tabs centered v-model="tab">
       <v-tab>Games</v-tab>
       <v-tab>Accounts</v-tab>
@@ -7,8 +7,12 @@
     </v-tabs>
     <v-tabs-items v-model="tab">
       <v-tab-item>
-        <Statistics />
-        <Games />
+        <v-row no-gutters>
+          <v-col cols="12">
+            <Statistics />
+          </v-col>
+          <v-col cols="12"> <Games /></v-col>
+        </v-row>
       </v-tab-item>
       <v-tab-item>
         <Accounts />
@@ -17,7 +21,7 @@
         <Platforms />
       </v-tab-item>
     </v-tabs-items>
-  </div>
+  </v-container>
 </template>
 
 <script>

@@ -1,53 +1,49 @@
 <template>
-  <v-card color="blue">
-    <v-card-title>Login</v-card-title>
+  <v-card color="secondary">
     <v-card-text>
-      <v-expansion-panels multiple>
-        <v-expansion-panel>
-          <v-expansion-panel-header>Social Login</v-expansion-panel-header>
-          <v-expansion-panel-content>
-            <v-row align="center" justify="center">
-              <v-col cols="12">
-                <v-btn large color="red" @click="signInWithGoogle()">
-                  <v-icon left>mdi-google</v-icon>
-                  Sign in With Google
-                </v-btn>
-              </v-col>
-              <v-col cols="12">
-                <v-btn large color="blue">
-                  <v-icon>mdi-facebook</v-icon>
-                  Sign In With Facebook
-                </v-btn>
-              </v-col>
-            </v-row>
-          </v-expansion-panel-content>
-        </v-expansion-panel>
-        <v-expansion-panel>
-          <v-expansion-panel-header>
-            With Email
-          </v-expansion-panel-header>
-          <v-expansion-panel-content>
-            <v-form>
-              <v-text-field
-                label="Email"
-                v-model="email"
-                required
-                :rules="[v => !!v || 'Email is required']"
-              />
-              <v-text-field
-                label="Password"
-                v-model="password"
-                type="password"
-                required
-                :rules="[v => !!v || 'Password is required']"
-              />
-            </v-form>
-          </v-expansion-panel-content>
-        </v-expansion-panel>
-      </v-expansion-panels>
+      <v-row class="text-center" align="center" justify="center">
+        <v-col cols="12">
+          <v-btn block large color="red" @click="signInWithGoogle()">
+            <v-icon left>mdi-google</v-icon>
+            Sign in With Google
+          </v-btn>
+        </v-col>
+        <v-col cols="12">
+          <v-btn block large color="blue" @click="signInWithFacebook()">
+            <v-icon left>mdi-facebook</v-icon>
+            Sign In With Facebook
+          </v-btn>
+        </v-col>
+      </v-row>
+      <v-divider class="mt-5">inset</v-divider>
+      <v-row class="mt-3">
+        <v-col>
+          <v-form>
+            <v-text-field
+              solo-inverted
+              label="yours@example.com"
+              prepend-inner-icon="mdi-account"
+              v-model="email"
+              required
+              :rules="[(v) => !!v || 'Email is required']"
+            />
+            <v-text-field
+              solo-inverted
+              label="your password"
+              prepend-inner-icon="mdi-lock"
+              v-model="password"
+              type="password"
+              required
+              :rules="[(v) => !!v || 'Password is required']"
+            />
+          </v-form>
+        </v-col>
+      </v-row>
     </v-card-text>
     <v-card-actions>
-      <v-btn block :loading="loading" @click="signIn">Login</v-btn>
+      <v-btn block :loading="loading" @click="signInWithEmail">
+        Sign in <v-icon>mdi-chevron-right</v-icon>
+      </v-btn>
     </v-card-actions>
     <v-alert type="error" v-if="error">
       {{ error }}
@@ -65,11 +61,11 @@ export default {
       email: null,
       password: null,
       isValid: false,
-      error: null
+      error: null,
     };
   },
   methods: {
-    signIn() {
+    signInWithEmail() {
       this.loading = true;
       firebase
         .auth()
@@ -79,7 +75,7 @@ export default {
           this.email = null;
           this.password = null;
         })
-        .catch(err => {
+        .catch((err) => {
           this.error = err.message;
         })
         .finally(() => {
@@ -94,7 +90,16 @@ export default {
         .then(() => {
           this.$router.replace("/");
         });
-    }
-  }
+    },
+    signInWithFacebook() {
+      const provider = new firebase.auth.FacebookAuthProvider();
+      firebase
+        .auth()
+        .signInWithPopup(provider)
+        .then(() => {
+          this.$router.replace("/");
+        });
+    },
+  },
 };
 </script>

@@ -2,9 +2,7 @@
   <v-app>
     <v-main>
       <AppBar v-if="user" />
-      <v-container fluid>
-        <router-view />
-      </v-container>
+      <router-view />
     </v-main>
   </v-app>
 </template>
