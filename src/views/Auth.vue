@@ -1,13 +1,11 @@
 <template>
   <v-container fluid fill-height>
     <v-row class="fill-height" align="center">
-      <v-col class="d-none d-md-block blue fill-height" md="7">
-       
-      </v-col>
+      <v-col class="d-none d-md-block blue fill-height" md="7"> </v-col>
       <v-col cols="12" md="5">
         <v-row justify="center">
-          <v-col cols="12" sm="8" md="10">
-            <v-card class="secondary">
+          <v-col cols="11" sm="8" md="10">
+            <v-card>
               <v-card-title class="primary">
                 <v-row class="text-center" justify="center" align="center">
                   <v-col align-self="center" justify-self="center">
@@ -26,7 +24,7 @@
                     <Login />
                   </v-tab-item>
                   <v-tab-item>
-                    <Registration class="mb-3" />
+                    <Registration />
                   </v-tab-item>
                 </v-tabs-items>
               </v-card-text>
@@ -53,3 +51,9 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.container {
+  padding: 0;
+}
+</style>

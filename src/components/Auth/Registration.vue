@@ -1,40 +1,38 @@
 <template>
-  <v-card>
-    <v-card-title>Create Account</v-card-title>
-    <v-card-text>
-      <v-form>
-        <v-text-field
-          label="Email"
-          v-model="email"
-          required
-          :rules="[v => !!v || 'Email is required']"
-        />
-        <v-text-field
-          label="Password"
-          v-model="password"
-          type="password"
-          required
-          :rules="[v => !!v || 'Password is required']"
-        />
-      </v-form>
-    </v-card-text>
-    <v-card-actions>
-      <v-btn block @click="register()">Create Account</v-btn>
-    </v-card-actions>
-  </v-card>
+  <div class="mt-6">
+    <v-row>
+      <v-col cols="12">
+        <EmailForm @inputChanged="emailFormChanged" />
+      </v-col>
+    </v-row>
+    <v-col cols="12">
+      <v-btn block :disabled="!isValid" @click="register()" color="success">
+        Create Account
+      </v-btn>
+    </v-col>
+  </div>
 </template>
 
 <script>
 import firebase from "firebase/app";
+import EmailForm from "@/components/Auth/EmailForm";
 export default {
+  components: {
+    EmailForm,
+  },
   data() {
     return {
       email: null,
       password: null,
-      isValid: false
+      isValid: false,
     };
   },
   methods: {
+    emailFormChanged(event) {
+      this.email = event.email;
+      this.password = event.password;
+      this.isValid = event.isValid;
+    },
     register() {
       firebase
         .auth()
@@ -42,10 +40,10 @@ export default {
         .then(() => {
           this.$router.replace("/");
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
         });
-    }
-  }
+    },
+  },
 };
 </script>

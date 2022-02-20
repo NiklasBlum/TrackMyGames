@@ -1,70 +1,62 @@
 <template>
-  <v-card color="secondary">
-    <v-card-text>
-      <v-row class="text-center" align="center" justify="center">
-        <v-col cols="12">
-          <v-btn block large color="red" @click="signInWithGoogle()">
-            <v-icon left>mdi-google</v-icon>
-            Sign in With Google
-          </v-btn>
-        </v-col>
-        <v-col cols="12">
-          <v-btn block large color="blue" @click="signInWithFacebook()">
-            <v-icon left>mdi-facebook</v-icon>
-            Sign In With Facebook
-          </v-btn>
-        </v-col>
-      </v-row>
-      <v-divider class="mt-5">inset</v-divider>
-      <v-row class="mt-3">
-        <v-col>
-          <v-form>
-            <v-text-field
-              solo-inverted
-              label="yours@example.com"
-              prepend-inner-icon="mdi-account"
-              v-model="email"
-              required
-              :rules="[(v) => !!v || 'Email is required']"
-            />
-            <v-text-field
-              solo-inverted
-              label="your password"
-              prepend-inner-icon="mdi-lock"
-              v-model="password"
-              type="password"
-              required
-              :rules="[(v) => !!v || 'Password is required']"
-            />
-          </v-form>
-        </v-col>
-      </v-row>
-    </v-card-text>
-    <v-card-actions>
-      <v-btn block :loading="loading" @click="signInWithEmail">
-        Sign in <v-icon>mdi-chevron-right</v-icon>
-      </v-btn>
-    </v-card-actions>
-    <v-alert type="error" v-if="error">
-      {{ error }}
-    </v-alert>
-  </v-card>
+  <div class="mt-6">
+    <v-row class="text-center" align="center" justify="center">
+      <v-col cols="12">
+        <v-btn block large color="red" @click="signInWithGoogle()">
+          <v-icon left>mdi-google</v-icon>
+          Sign in With Google
+        </v-btn>
+      </v-col>
+      <v-col cols="12">
+        <v-btn block large color="blue" @click="signInWithFacebook()">
+          <v-icon left>mdi-facebook</v-icon>
+          Sign In With Facebook
+        </v-btn>
+      </v-col>
+    </v-row>
+    <v-divider class="my-7" />
+    <v-row>
+      <v-col cols="12">
+        <EmailForm @inputChanged="emailFormChanged" />
+      </v-col>
+      <v-col cols="12">
+        <v-btn
+          block
+          :disabled="!isEmailFormValid"
+          :loading="loading"
+          @click="signInWithEmail"
+          color="success"
+        >
+          Sign in <v-icon>mdi-chevron-right</v-icon>
+        </v-btn>
+      </v-col>
+    </v-row>
+    {{ this.error }}
+  </div>
 </template>
 
 <script>
 import firebase from "firebase/app";
-
+import EmailForm from "@/components/Auth/EmailForm.vue";
 export default {
+  components: {
+    EmailForm,
+  },
   data() {
     return {
-      loading: false,
       email: null,
       password: null,
-      isValid: false,
+      loading: false,
+      isEmailFormValid: false,
       error: null,
     };
   },
   methods: {
+    emailFormChanged(event) {
+      this.email = event.email;
+      this.password = event.password;
+      this.isEmailFormValid = event.isValid;
+    },
     signInWithEmail() {
       this.loading = true;
       firebase
@@ -76,6 +68,7 @@ export default {
           this.password = null;
         })
         .catch((err) => {
+          console.log(err.message);
           this.error = err.message;
         })
         .finally(() => {
