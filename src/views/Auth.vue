@@ -1,7 +1,13 @@
 <template>
   <v-container fluid fill-height>
     <v-row class="fill-height" align="center">
-      <v-col class="d-none d-md-block blue fill-height" md="7"> </v-col>
+      <v-col class="d-none d-md-block blue fill-height" md="7">
+        <v-row class="fill-height" align="center" justify="center">
+          <v-col class="text-center">
+            <v-icon size="200">mdi-google-controller</v-icon>
+          </v-col>
+        </v-row>
+      </v-col>
       <v-col cols="12" md="5">
         <v-row justify="center">
           <v-col cols="11" sm="8" md="10">
