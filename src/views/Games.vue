@@ -45,7 +45,7 @@
         />
       </template>
       <template v-slot:item.editedAt="{ item }">
-        {{ item.createdAt.toDate().toLocaleDateString("de-DE") }}
+        {{ item.editedAt.toDate().toLocaleDateString("de-DE") }}
       </template>
       <template v-slot:item.action="{ item }">
         <v-icon class="mr-2" @click="editGame(item)">mdi-pencil</v-icon>
