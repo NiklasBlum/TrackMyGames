@@ -22,6 +22,8 @@
             single-line
             hide-details
             clearable
+            @focus="quickActionEnabled = false"
+            @blur="quickActionEnabled = true"
           />
           <v-spacer />
           <v-btn icon @click="isDense = !isDense" class="d-none d-sm-flex">
@@ -100,10 +102,11 @@ export default {
       search: "",
       showDialog: false,
       gameItem: new Game(),
+      quickActionEnabled: true,
     };
   },
   computed: {
-    ...mapState(["platforms", "accounts", "gameStateInfos"]),
+    ...mapState(["platforms", "accounts", "gameStateInfos", "currentView"]),
     games: {
       get() {
         return this.$store.state.games;
@@ -142,6 +145,17 @@ export default {
       this.showDialog = false;
       this.gameItem = new Game();
     },
+  },
+  mounted() {
+    window.addEventListener("keypress", (e) => {
+      if (e.key == "n" && this.quickActionEnabled && this.currentView == 0) {
+        this.openDialog();
+      }
+    });
+  },
+  beforeDestroy() {
+    console.log("Destroy");
+    window.removeEventListener("keypress");
   },
 };
 </script>

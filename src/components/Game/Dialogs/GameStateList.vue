@@ -8,6 +8,7 @@
           v-for="gameStateInfo in this.gameStateInfos"
           :key="gameStateInfo.id"
           @click="emitGameState(gameStateInfo.id)"
+          @keyup.space="emitGameState(gameStateInfo.id)"
         >
           <v-list-item-icon>
             <v-icon
@@ -38,7 +39,7 @@ export default {
   },
   methods: {
     emitGameState(id) {
-      this.$emit("gameStateIdChanged", id);
+      this.$emit("gameStateIdChanged", id);      
     },
     selectGameStateInfo() {
       this.selectedGameStateInfoIndex = this.gameStateInfos.findIndex(

@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="showDialog" max-width="600px">
+  <v-dialog persistent v-model="showDialog" max-width="600px">
     <v-card outlined elevation="5">
       <v-card-title class="primary">
         <span class="headline">{{ formTitle }}</span>
@@ -87,6 +87,6 @@ export default {
     formTitle() {
       return this.gameItem.name != undefined ? "Edit Game" : "New Game";
     },
-  },
+  }, 
 };
 </script>

@@ -9,7 +9,7 @@ export default new Vuex.Store({
     accounts: [],
     games: [],
     user: null,
-    currentView: "games",
+    currentView: 0,
     gameStateInfos: [
       new GameStateInfo(
         "0",
