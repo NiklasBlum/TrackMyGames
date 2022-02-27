@@ -5,9 +5,9 @@
       :headers="tableHeaders"
       :items="games"
       :sort-by="'gameStateId'"
-      :items-per-page="20"
+      :items-per-page="15"
       :footer-props="{
-        'items-per-page-options': [10, 20, 30, 40, 50],
+        'items-per-page-options': [10, 15, 20, 30, 40, 50],
       }"
       :search="search"
     >
