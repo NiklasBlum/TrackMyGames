@@ -27,9 +27,9 @@
 </template>
 
 <script>
-import Games from "@/views/Games.vue";
-import Accounts from "@/views/Accounts.vue";
-import Platforms from "@/views/Platforms.vue";
+import Games from "@/components/Game/GameTable.vue";
+import Accounts from "@/components/Account/AccountList.vue";
+import Platforms from "@/components/Platform/PlatformList.vue";
 import Statistics from "@/components/Statistic.vue";
 import FirestoreService from "@/services/FirestoreService.js";
 export default {

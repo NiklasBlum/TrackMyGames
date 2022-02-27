@@ -4,7 +4,7 @@
       <v-card-title class="primary">
         <span class="headline">{{ formTitle }}</span>
       </v-card-title>
-      <v-card-text>
+      <v-card-text style="padding-bottom: 0">
         <v-container>
           <v-row>
             <v-col cols="12" sm="6" md="6">
@@ -13,6 +13,7 @@
                 label="Game Name"
                 autofocus
                 clearable
+                hide-details
               />
             </v-col>
             <v-col cols="12" sm="6" md="6">
@@ -22,16 +23,18 @@
                 item-value="id"
                 item-text="name"
                 label="Platforms"
+                hide-details
                 clearable
               />
             </v-col>
-            <v-col cols="12" sm="6" md="6">
+            <v-col cols="12" sm="6" md="12">
               <v-select
                 v-model="gameItem.accountId"
                 :items="accounts"
                 item-value="id"
                 item-text="name"
                 label="Accounts"
+                hide-details
                 clearable
               />
             </v-col>
@@ -64,7 +67,7 @@
 
 <script>
 import { mapState } from "vuex";
-import GameStateList from "@/components/dialogs/GameStateList.vue";
+import GameStateList from "@/components/Game/Dialogs/GameStateList.vue";
 export default {
   props: {
     gameItem: Object,
@@ -87,6 +90,3 @@ export default {
   },
 };
 </script>
-
-<style>
-</style>

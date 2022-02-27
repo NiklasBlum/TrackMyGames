@@ -24,11 +24,17 @@
             clearable
           />
           <v-spacer />
-          <v-btn icon @click="isDense = !isDense">
-            <v-icon>mdi-minus-circle-outline</v-icon>
+          <v-btn icon @click="isDense = !isDense" class="d-none d-sm-flex">
+            <v-icon size="30">
+              {{
+                isDense == true
+                  ? "mdi-arrow-expand-vertical"
+                  : "mdi-arrow-collapse-vertical"
+              }}</v-icon
+            >
           </v-btn>
           <v-btn large icon @click="openDialog">
-            <v-icon>mdi-plus-circle</v-icon>
+            <v-icon size="35">mdi-plus-circle</v-icon>
           </v-btn>
         </v-toolbar>
       </template>
@@ -48,8 +54,8 @@
         {{ item.editedAt.toDate().toLocaleDateString("de-DE") }}
       </template>
       <template v-slot:item.action="{ item }">
-        <v-icon class="mr-2" @click="editGame(item)">mdi-pencil</v-icon>
-        <v-icon @click="deleteGame(item.id)">mdi-delete</v-icon>
+        <v-icon class="mr-2" @click="editGame(item)"> mdi-file-edit </v-icon>
+        <v-icon @click="deleteGame(item.id)">mdi-delete-forever</v-icon>
       </template>
     </v-data-table>
 
@@ -66,10 +72,10 @@
 import FirestoreService from "@/services/FirestoreService.js";
 import { Game } from "@/models/dbModels.js";
 import { DialogMode } from "@/models/localModels.js";
-import GameEditDialog from "@/components/dialogs/GameEditDialog.vue";
-import PlatformIcon from "@/components/PlatformIcon.vue";
-import AccountName from "@/components/AccountName.vue";
-import GameStateInfo from "@/components/GameStateInfo.vue";
+import GameEditDialog from "@/components/Game/Dialogs/GameEditDialog.vue";
+import PlatformIcon from "@/components/Platform/PlatformIcon.vue";
+import AccountName from "@/components/Account/AccountName.vue";
+import GameStateInfo from "@/components/Game/GameStateInfo.vue";
 import { mapState } from "vuex";
 export default {
   components: {
