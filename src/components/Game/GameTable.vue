@@ -40,6 +40,9 @@
           </v-btn>
         </v-toolbar>
       </template>
+      <template v-slot:item.name="{ item }">
+        <h2 class="">{{ item.name }}</h2>
+      </template>
       <template v-slot:item.platformId="{ item }">
         <PlatformIcon v-if="item.platformId" :platformId="item.platformId" />
       </template>
