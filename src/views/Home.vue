@@ -11,7 +11,9 @@
           <v-col cols="12">
             <Statistics />
           </v-col>
-          <v-col cols="12"> <Games /></v-col>
+          <v-col cols="12">
+            <Games />
+          </v-col>
         </v-row>
       </v-tab-item>
       <v-tab-item>

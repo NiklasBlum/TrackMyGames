@@ -7,10 +7,17 @@
         class="text-center display-1 py-3"
         :class="item.color"
       >
-        <span class="mt-1">
-          {{ item.gameCount }}
-        </span>
-        <v-icon class="ml-1" size="40">{{ item.icon }}</v-icon>
+        <v-tooltip bottom color="primary">
+          <template v-slot:activator="{ on, attrs }">
+            <span v-bind="attrs" v-on="on">
+              {{ item.gameCount }}
+              <v-icon class="ml-1" size="40">
+                {{ item.icon }}
+              </v-icon>
+            </span>
+          </template>
+          <span>{{ item.title }}</span>
+        </v-tooltip>
       </v-col>
     </v-row>
   </div>
@@ -25,9 +32,6 @@ export default {
     };
   },
   methods: {
-    getProportion(count) {
-      return (count / this.totalGamesAmount) * 100;
-    },
     calculateStatistics() {
       this.gameStateStatistics = [];
       for (const key in this.gameStateInfos) {
@@ -35,12 +39,12 @@ export default {
         var gameCount = this.games.filter((game) => {
           return game.gameStateId == gameStateInfo.id;
         });
-        var obj = {
+        this.gameStateStatistics.push({
           gameCount: gameCount.length,
           icon: gameStateInfo.icon,
           color: gameStateInfo.color,
-        };
-        this.gameStateStatistics.push(obj);
+          title: gameStateInfo.title
+        });
       }
     },
   },
@@ -56,9 +60,6 @@ export default {
     ...mapState(["games", "gameStateInfos"]),
     totalGamesAmount() {
       return this.games.length;
-    },
-    proportion() {
-      return (this.finished / this.totalGamesAmount) * 100;
     },
   },
 };

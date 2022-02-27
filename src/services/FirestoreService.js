@@ -2,7 +2,6 @@ import { firestore, fsTimestamp } from "@/firebase/config";
 import store from "@/store"
 
 export default {
-    //User -----------------------------------------------------------------------------------------------------------------------------------User Start
     async createUserIfNotExists() {
         const query = firestore.collection("users").where("userId", "==", store.state.user.uid);
         try {
@@ -19,9 +18,7 @@ export default {
             console.log('Error when settings User: ', error);
         }
     },
-    //User -----------------------------------------------------------------------------------------------------------------------------------User End
 
-    //Documents ------------------------------------------------------------------------------------------------------------------------------Documents Start
     async getDocuments(collectionName) {
         const query = firestore.collection(collectionName);
         const snapshot = await query.where("userId", "==", store.state.user.uid)
@@ -39,9 +36,7 @@ export default {
             .doc(id)
             .delete();
     },
-    //Documents ------------------------------------------------------------------------------------------------------------------------------Documents End
 
-    //Platform -------------------------------------------------------------------------------------------------------------------------------Platform Start
     async addPlatform(platform) {
         return await firestore
             .collection("platforms")
@@ -59,9 +54,7 @@ export default {
             icon: platform.icon,
         });
     },
-    //Platform -------------------------------------------------------------------------------------------------------------------------------Platform End
 
-    //Account --------------------------------------------------------------------------------------------------------------------------------Account Start
     async addAccount(account) {
         return await firestore
             .collection("accounts")
@@ -76,9 +69,7 @@ export default {
             name: account.name,
         });
     },
-    //Account -------------------------------------------------------------------------------------------------------------------------------Account End
 
-    //Game ----------------------------------------------------------------------------------------------------------------------------------Game Start
     async addGame(game) {
         return await firestore
             .collection("games")
@@ -101,5 +92,4 @@ export default {
             editedAt: fsTimestamp()
         });
     },
-    //Game -------------------------------------------------------------------------------------------------------------------------------Game End
 }

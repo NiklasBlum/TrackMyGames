@@ -1,7 +1,7 @@
 <template>
   <v-dialog v-model="showDialog" max-width="600px">
-    <v-card>
-      <v-card-title>
+    <v-card outlined elevation="5">
+      <v-card-title class="primary">
         <span class="headline">{{ formTitle }}</span>
       </v-card-title>
       <v-card-text>
@@ -36,8 +36,7 @@
               />
             </v-col>
             <v-col>
-              <GameStateDialog
-                v-if="showDialog"
+              <GameStateList
                 @gameStateIdChanged="gameItem.gameStateId = $event"
                 :gameStateId="gameItem.gameStateId"
               />
@@ -65,14 +64,14 @@
 
 <script>
 import { mapState } from "vuex";
-import GameStateDialog from "@/components/dialogs/GameStateDialog.vue";
+import GameStateList from "@/components/dialogs/GameStateList.vue";
 export default {
   props: {
     gameItem: Object,
     showDialog: Boolean,
   },
   components: {
-    GameStateDialog,
+    GameStateList,
   },
   computed: {
     ...mapState(["platforms", "accounts"]),

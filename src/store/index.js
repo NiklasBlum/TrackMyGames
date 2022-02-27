@@ -17,7 +17,7 @@ export default new Vuex.Store({
         "Uncategorized",
         "I'll pick the category later",
         "mdi-help-circle",
-        "warning"
+        "brown"
       ),
       new GameStateInfo(
         "1",
@@ -48,8 +48,8 @@ export default new Vuex.Store({
         GameState.notPlayed,
         "Not played",
         "I'll play it later",
-        "mdi-archive-plus",
-        "purple"
+        "mdi-google-controller-off",
+        "orange"
       ),
       new GameStateInfo(
         "5",
@@ -57,7 +57,8 @@ export default new Vuex.Store({
         "Wishlist",
         "I want to buy this game",
         "mdi-cart-plus",
-        "orange"
+        "purple"
+
       ),
     ],
   },
