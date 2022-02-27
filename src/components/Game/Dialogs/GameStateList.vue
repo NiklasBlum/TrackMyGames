@@ -39,7 +39,7 @@ export default {
   },
   methods: {
     emitGameState(id) {
-      this.$emit("gameStateIdChanged", id);      
+      this.$emit("gameStateIdChanged", id);
     },
     selectGameStateInfo() {
       this.selectedGameStateInfoIndex = this.gameStateInfos.findIndex(
@@ -58,6 +58,11 @@ export default {
   },
   created() {
     this.selectGameStateInfo();
+  },
+  watch: {
+    gameStateId() {
+      this.selectGameStateInfo();
+    },
   },
 };
 </script>
