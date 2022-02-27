@@ -12,31 +12,31 @@
             <Statistics />
           </v-col>
           <v-col cols="12">
-            <Games />
+            <GameTable />
           </v-col>
         </v-row>
       </v-tab-item>
       <v-tab-item>
-        <Accounts />
+        <AccountList />
       </v-tab-item>
       <v-tab-item>
-        <Platforms />
+        <PlatformList />
       </v-tab-item>
     </v-tabs-items>
   </v-container>
 </template>
 
 <script>
-import Games from "@/components/Game/GameTable.vue";
-import Accounts from "@/components/Account/AccountList.vue";
-import Platforms from "@/components/Platform/PlatformList.vue";
+import GameTable from "@/components/Game/GameTable.vue";
+import AccountList from "@/components/Account/AccountList.vue";
+import PlatformList from "@/components/Platform/PlatformList.vue";
 import Statistics from "@/components/Statistic.vue";
 import FirestoreService from "@/services/FirestoreService.js";
 export default {
   components: {
-    Games,
-    Accounts,
-    Platforms,
+    GameTable,
+    AccountList,
+    PlatformList,
     Statistics,
   },
   data() {
@@ -46,16 +46,22 @@ export default {
   },
   methods: {
     async getPlatforms() {
-      const platforms = await FirestoreService.getDocuments("platforms");
-      this.$store.commit("setPlatforms", platforms);
+      this.$store.commit(
+        "setPlatforms",
+        await FirestoreService.getDocuments("platforms")
+      );
     },
     async getGames() {
-      const games = await FirestoreService.getDocuments("games");
-      this.$store.commit("setGames", games);
+      this.$store.commit(
+        "setGames",
+        await FirestoreService.getDocuments("games")
+      );
     },
     async getAccounts() {
-      const accounts = await FirestoreService.getDocuments("accounts");
-      this.$store.commit("setAccounts", accounts);
+      this.$store.commit(
+        "setAccounts",
+        await FirestoreService.getDocuments("accounts")
+      );
     },
   },
   mounted() {

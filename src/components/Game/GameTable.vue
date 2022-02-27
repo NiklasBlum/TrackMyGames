@@ -77,6 +77,7 @@ import PlatformIcon from "@/components/Platform/PlatformIcon.vue";
 import AccountName from "@/components/Account/AccountName.vue";
 import GameStateInfo from "@/components/Game/GameStateInfo.vue";
 import { mapState } from "vuex";
+
 export default {
   components: {
     GameEditDialog,
