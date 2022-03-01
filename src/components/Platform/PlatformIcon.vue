@@ -2,7 +2,12 @@
   <v-tooltip v-if="this.platform" left color="primary">
     <template v-slot:activator="{ on, attrs }">
       <span v-bind="attrs" v-on="on">
-        <v-icon size="30">{{ platform.icon }}</v-icon>
+        <v-btn
+          @click="$store.commit('setGameTableSearchText', platform.id)"
+          icon
+        >
+          <v-icon size="30">{{ platform.icon }}</v-icon>
+        </v-btn>
       </span>
     </template>
     <span>{{ platform.name }}</span>

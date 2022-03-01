@@ -1,5 +1,9 @@
 <template>
-  <div v-if="this.account">{{ this.account.name }}</div>
+  <v-btn text  plain
+    v-if="this.account"
+    @click="$store.commit('setGameTableSearchText', account.id)"
+    >{{ this.account.name }}</v-btn
+  >
   <div v-else class="red--text">not found!</div>
 </template>
 

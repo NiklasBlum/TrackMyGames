@@ -1,5 +1,5 @@
 <template>
-  <div class="mt-3">
+  <div class="mt-2">
     <v-row no-gutters align="center" justify="center">
       <v-col
         v-for="item in gameStateStatistics"

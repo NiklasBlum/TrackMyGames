@@ -12,8 +12,9 @@
                 v-model="gameItem.name"
                 label="Game Name"
                 autofocus
+                :hint="hint"
                 clearable
-                hide-details
+                :rules="rules"
               />
             </v-col>
             <v-col cols="12" sm="6" md="6">
@@ -25,7 +26,18 @@
                 label="Platforms"
                 hide-details
                 clearable
-              />
+              >
+                <template v-slot:item="data">
+                  <v-list-item-avatar>
+                    <v-icon>{{ data.item.icon }}</v-icon>
+                  </v-list-item-avatar>
+                  <v-list-item-content>
+                    <v-list-item-title
+                      v-html="data.item.name"
+                    ></v-list-item-title>
+                  </v-list-item-content>
+                </template>
+              </v-select>
             </v-col>
             <v-col cols="12" sm="6" md="12">
               <v-select
@@ -67,18 +79,31 @@
 
 <script>
 import { mapState } from "vuex";
-import GameStateList from "@/components/Game/Dialogs/GameStateList.vue";
+import GameStateList from "@/components/Game/GameStateList.vue";
 export default {
   props: {
     gameItem: Object,
     showDialog: Boolean,
   },
+  data() {
+    return {
+      rules: [(value) => !!value || "Required."],
+    };
+  },
   components: {
     GameStateList,
   },
   computed: {
-    ...mapState(["platforms", "accounts"]),
-
+    ...mapState(["platforms", "accounts", "games"]),
+    hint() {
+      if (this.gameItem.name) {
+        var match = this.games.filter((game) => {
+          return game.name.toLowerCase() == this.gameItem.name.toLowerCase();
+        });
+        return match.length > 0 ? "Game already exists!" : undefined;
+      }
+      return undefined;
+    },
     isSavingValid() {
       if (this.gameItem.name != "" && this.gameItem.name != undefined) {
         return false;
@@ -87,6 +112,6 @@ export default {
     formTitle() {
       return this.gameItem.name != undefined ? "Edit Game" : "New Game";
     },
-  }, 
+  },
 };
 </script>

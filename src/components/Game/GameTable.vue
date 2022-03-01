@@ -9,14 +9,15 @@
       :footer-props="{
         'items-per-page-options': [10, 15, 20, 30, 40, 50],
       }"
-      :search="search"
+      multi-sort
+      :search="gameTableSearchText"
     >
       <template v-slot:top>
         <v-toolbar flat>
           <v-toolbar-title>{{ games.length }} Games</v-toolbar-title>
           <v-spacer />
           <v-text-field
-            v-model="search"
+            v-model="gameTableSearchText"
             append-icon="mdi-magnify"
             label="Search"
             single-line
@@ -32,9 +33,10 @@
                 isDense == true
                   ? "mdi-arrow-expand-vertical"
                   : "mdi-arrow-collapse-vertical"
-              }}</v-icon
-            >
+              }}
+            </v-icon>
           </v-btn>
+
           <v-btn large icon @click="openDialog">
             <v-icon size="35">mdi-plus-circle</v-icon>
           </v-btn>
@@ -77,7 +79,7 @@
 import FirestoreService from "@/services/FirestoreService.js";
 import { Game } from "@/models/dbModels.js";
 import { DialogMode } from "@/models/localModels.js";
-import GameEditDialog from "@/components/Game/Dialogs/GameEditDialog.vue";
+import GameEditDialog from "@/components/Game/GameEditDialog.vue";
 import PlatformIcon from "@/components/Platform/PlatformIcon.vue";
 import AccountName from "@/components/Account/AccountName.vue";
 import GameStateInfo from "@/components/Game/GameStateInfo.vue";
@@ -102,7 +104,6 @@ export default {
       ],
       dialogMode: DialogMode.new,
       isDense: true,
-      search: "",
       showDialog: false,
       gameItem: new Game(),
       quickActionEnabled: true,
@@ -116,6 +117,14 @@ export default {
       },
       set(games) {
         this.$store.commit("setGames", games);
+      },
+    },
+    gameTableSearchText: {
+      get() {
+        return this.$store.state.gameTableSearchText;
+      },
+      set(text) {
+        this.$store.commit("setGameTableSearchText", text);
       },
     },
   },
@@ -155,10 +164,6 @@ export default {
         this.openDialog();
       }
     });
-  },
-  beforeDestroy() {
-    console.log("Destroy");
-    window.removeEventListener("keypress");
   },
 };
 </script>

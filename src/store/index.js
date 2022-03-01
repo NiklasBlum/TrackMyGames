@@ -10,6 +10,7 @@ export default new Vuex.Store({
     games: [],
     user: null,
     currentView: 0,
+    gameTableSearchText: "",
     gameStateInfos: [
       new GameStateInfo(
         "0",
@@ -77,6 +78,9 @@ export default new Vuex.Store({
     },
     setCurrentView(state, view) {
       state.currentView = view;
+    },
+    setGameTableSearchText(state, text) {
+      state.gameTableSearchText = text;
     }
   }
 });

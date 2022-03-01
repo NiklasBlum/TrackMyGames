@@ -17,10 +17,18 @@
         </v-row>
       </v-tab-item>
       <v-tab-item>
-        <AccountList />
+        <v-row no-gutters>
+          <v-col cols="12">
+            <AccountList />
+          </v-col>
+        </v-row>
       </v-tab-item>
       <v-tab-item>
-        <PlatformList />
+        <v-row no-gutters>
+          <v-col cols="12">
+            <PlatformList />
+          </v-col>
+        </v-row>
       </v-tab-item>
     </v-tabs-items>
   </v-container>
@@ -72,7 +80,7 @@ export default {
       get() {
         return this.$store.state.currentView;
       },
-      set(view) {      
+      set(view) {
         this.$store.commit("setCurrentView", view);
       },
     },
