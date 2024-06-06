@@ -30,7 +30,7 @@
         </v-list-item-action>
       </v-list-item>
     </v-list>
-    <!-- PopUp Dialog -->
+    <!-- PopUpDialog -->
     <v-dialog
       v-model="showDialog"
       persistent
