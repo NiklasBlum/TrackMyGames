@@ -25,7 +25,7 @@ export default new Vuex.Store({
         GameState.currentlyPlaying,
         "Currently playing",
         "I play the game regularly",
-        "mdi-google-controller",
+        "mdi-controller",
         "cyan"
       ),
       new GameStateInfo(
@@ -49,7 +49,7 @@ export default new Vuex.Store({
         GameState.notPlayed,
         "Not played",
         "I'll play it later",
-        "mdi-google-controller-off",
+        "mdi-controller-off",
         "orange"
       ),
       new GameStateInfo(
@@ -59,7 +59,6 @@ export default new Vuex.Store({
         "I want to buy this game",
         "mdi-cart-plus",
         "purple"
-
       ),
     ],
   },
@@ -81,6 +80,6 @@ export default new Vuex.Store({
     },
     setGameTableSearchText(state, text) {
       state.gameTableSearchText = text;
-    }
-  }
+    },
+  },
 });
